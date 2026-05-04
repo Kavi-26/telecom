@@ -22,6 +22,9 @@ export default function NocDashboard() {
     health: null,
     alarms: []
   });
+  const [selectedElement, setSelectedElement] = useState(null);
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
 
   const fetchData = async () => {
     setLoading(true);
@@ -55,16 +58,23 @@ export default function NocDashboard() {
   }, []);
 
   const filteredData = useMemo(() => {
-    const currentList = data[activeTab] || [];
+    let currentList = data[activeTab] || [];
+    
+    // Status Filter
+    if (statusFilter !== 'all') {
+      currentList = currentList.filter(item => (item.status || 'up').toLowerCase() === statusFilter.toLowerCase());
+    }
+
     if (!searchTerm) return currentList;
     
     const term = searchTerm.toLowerCase();
     return currentList.filter(item => {
       const name = item.name || item.element_name || item.link_name || '';
       const location = item.location || item.region || '';
-      return name.toLowerCase().includes(term) || location.toLowerCase().includes(term);
+      const id = String(item.id || item.element_id || '');
+      return name.toLowerCase().includes(term) || location.toLowerCase().includes(term) || id.includes(term);
     });
-  }, [data, activeTab, searchTerm]);
+  }, [data, activeTab, searchTerm, statusFilter]);
 
   const stats = useMemo(() => ({
     ran: data.ran.length,
@@ -188,8 +198,20 @@ export default function NocDashboard() {
                 <button className={activeTab === 'transport' ? 'active' : ''} onClick={() => setActiveTab('transport')}>IP Transport</button>
               </div>
               <div className="view-actions">
-                <button className="icon-btn"><Filter size={16} /></button>
-                <button className="icon-btn"><Globe size={16} /></button>
+                <div className="filter-dropdown-wrapper">
+                  <button className={`icon-btn ${statusFilter !== 'all' ? 'active' : ''}`} onClick={() => setShowFilterMenu(!showFilterMenu)}>
+                    <Filter size={16} />
+                  </button>
+                  {showFilterMenu && (
+                    <div className="filter-menu">
+                      <div className="filter-menu-header">Filter by Status</div>
+                      <button className={statusFilter === 'all' ? 'selected' : ''} onClick={() => { setStatusFilter('all'); setShowFilterMenu(false); }}>All Status</button>
+                      <button className={statusFilter === 'up' ? 'selected' : ''} onClick={() => { setStatusFilter('up'); setShowFilterMenu(false); }}>Up / Active</button>
+                      <button className={statusFilter === 'down' ? 'selected' : ''} onClick={() => { setStatusFilter('down'); setShowFilterMenu(false); }}>Down / Inactive</button>
+                      <button className={statusFilter === 'degraded' ? 'selected' : ''} onClick={() => { setStatusFilter('degraded'); setShowFilterMenu(false); }}>Degraded</button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -243,7 +265,7 @@ export default function NocDashboard() {
                       <td>
                         <button 
                           className="btn-manage" 
-                          onClick={() => navigate(`/${activeTab}`)}
+                          onClick={() => setSelectedElement(item)}
                         >
                           Inspect <ChevronRight size={14} />
                         </button>
@@ -288,38 +310,78 @@ export default function NocDashboard() {
                   </div>
                 ))}
               </div>
-              <button 
-                className="btn-full-width"
-                onClick={() => navigate('/alarms')}
-              >
-                View All Alarms
-              </button>
             </div>
 
-            <div className="noc-card insights-card">
-              <div className="noc-card-header">
-                <h3>System Insights</h3>
-              </div>
-              <div className="insights-content">
-                <div className="insight-row">
-                  <div className="insight-icon pulse"><Activity size={18} /></div>
-                  <div className="insight-text">
-                    <strong>Traffic Surge</strong>
-                    <p>15% increase in CORE throughput detected in last 10 mins.</p>
-                  </div>
+          </div>
+        </div>
+      </div>
+      {/* Element Detail Modal */}
+      {selectedElement && (
+        <div className="noc-modal-overlay" onClick={() => setSelectedElement(null)}>
+          <div className="noc-modal-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Element Detailed Profile</h2>
+              <button className="close-btn" onClick={() => setSelectedElement(null)}>×</button>
+            </div>
+            <div className="modal-body">
+              <div className="detail-hero">
+                <div className={`detail-icon-bg ${activeTab}`}>
+                  {activeTab === 'ran' ? <Radio size={32} /> : activeTab === 'core' ? <Server size={32} /> : <Network size={32} />}
                 </div>
-                <div className="insight-row">
-                  <div className="insight-icon"><Cpu size={18} /></div>
-                  <div className="insight-text">
-                    <strong>Resource Utilization</strong>
-                    <p>RAN controllers in Zone B at 88% capacity.</p>
+                <div className="detail-title">
+                  <h3>{selectedElement.name || selectedElement.element_name || selectedElement.link_name}</h3>
+                  <span className={`status-badge ${selectedElement.status || 'up'}`}>{selectedElement.status || 'Active'}</span>
+                </div>
+              </div>
+              
+              <div className="detail-grid">
+                <div className="detail-item">
+                  <label>Element ID</label>
+                  <span>{selectedElement.id || selectedElement.element_id || 'N/A'}</span>
+                </div>
+                <div className="detail-item">
+                  <label>Type / Vendor</label>
+                  <span>{selectedElement.type || selectedElement.element_type || 'Transport Link'} ({selectedElement.vendor || 'Cisco'})</span>
+                </div>
+                <div className="detail-item">
+                  <label>Primary Location</label>
+                  <span>{selectedElement.location || selectedElement.region || 'Central Office'}</span>
+                </div>
+                <div className="detail-item">
+                  <label>Last Maintenance</label>
+                  <span>2024-04-12 09:00</span>
+                </div>
+                <div className="detail-item">
+                  <label>IP Address</label>
+                  <span>10.{Math.floor(Math.random() * 255)}.{Math.floor(Math.random() * 255)}.{Math.floor(Math.random() * 255)}</span>
+                </div>
+                <div className="detail-item">
+                  <label>Firmware Version</label>
+                  <span>v4.2.1-stable</span>
+                </div>
+              </div>
+
+              <div className="detail-performance">
+                <h4>Real-time Performance Metrics</h4>
+                <div className="metrics-grid">
+                  <div className="metric-box">
+                    <span className="m-label">CPU Load</span>
+                    <span className="m-val">{Math.floor(Math.random() * 40) + 10}%</span>
+                  </div>
+                  <div className="metric-box">
+                    <span className="m-label">Memory</span>
+                    <span className="m-val">{Math.floor(Math.random() * 30) + 40}%</span>
+                  </div>
+                  <div className="metric-box">
+                    <span className="m-label">Throughput</span>
+                    <span className="m-val">{Math.floor(Math.random() * 800) + 200} Mbps</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
