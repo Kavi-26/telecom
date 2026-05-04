@@ -1,0 +1,245 @@
+/* RAN.css - Premium Radio Access Network Dashboard Styling */
+
+.ran-dashboard-modern {
+  padding: 1.5rem;
+  background: var(--bg-primary);
+  min-height: 100vh;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Alert Banner */
+.alert-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  margin-bottom: 0.5rem;
+  border-left: 5px solid;
+  backdrop-filter: blur(10px);
+}
+
+.alert-banner.critical {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+  color: #fca5a5;
+}
+
+.alert-banner.critical .alert-title {
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+
+.alert-banner.critical .alert-desc {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+/* Stat Cards are handled by global classes in index.css, 
+   but we can add RAN specific overrides if needed */
+
+.map-section {
+  min-height: 500px;
+}
+
+.map-tiles {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+.bts-popup .leaflet-popup-content-wrapper {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+}
+
+.popup-content h4 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--brand-primary);
+}
+
+.popup-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 1rem;
+  font-size: 0.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.popup-grid span:nth-child(odd) {
+  color: var(--text-muted);
+}
+
+/* Alarms Feed */
+.alarm-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 450px;
+}
+
+.alarm-item {
+  padding: 1rem;
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  display: flex;
+  gap: 1rem;
+  transition: var(--transition);
+}
+
+.alarm-item:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-card-hover);
+}
+
+.alarm-item.critical { border-left: 4px solid #ef4444; }
+.alarm-item.major { border-left: 4px solid #f59e0b; }
+.alarm-item.minor { border-left: 4px solid #3b82f6; }
+
+.alarm-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.alarm-item.critical .alarm-icon { color: #ef4444; }
+.alarm-item.major .alarm-icon { color: #f59e0b; }
+.alarm-item.minor .alarm-icon { color: #3b82f6; }
+
+.alarm-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.alarm-bts {
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.alarm-time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.alarm-type {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+  opacity: 0.8;
+}
+
+.alarm-msg {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Modal Styling */
+.bts-details-modal {
+  max-width: 700px !important;
+}
+
+.modal-title-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.modal-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--brand-primary);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.detail-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.detail-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.metrics-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.metric-box {
+  background: var(--bg-secondary);
+  padding: 1.25rem;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.metric-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: 850;
+  margin-bottom: 0.25rem;
+}
+
+.metric-status {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.metric-status.good { color: #10b981; }
+.metric-status.warning { color: #f59e0b; }
+.metric-status.healthy { color: var(--brand-primary); }
+
+.modal-chart-section h3 {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

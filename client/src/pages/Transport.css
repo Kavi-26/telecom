@@ -1,0 +1,120 @@
+/* Topology Map Styling */
+.topology-section .leaflet-container {
+  background: var(--bg-secondary) !important;
+}
+
+.map-tiles {
+  filter: grayscale(1) invert(1) contrast(1.2) brightness(0.6) hue-rotate(180deg);
+}
+
+.map-legend {
+  display: flex;
+  gap: 16px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* Link Popups */
+.link-popup {
+  min-width: 180px;
+}
+
+.link-popup strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--brand-primary);
+}
+
+.popup-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  font-size: 11px;
+}
+
+.popup-grid span:nth-child(odd) {
+  color: var(--text-muted);
+}
+
+/* Alarms Feed (Consistent with RAN/CORE) */
+.alarm-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 440px;
+  overflow-y: auto;
+}
+
+.alarm-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg-secondary);
+  border-left: 4px solid transparent;
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+
+.alarm-item.critical { border-left-color: var(--alarm-critical); }
+.alarm-item.major    { border-left-color: var(--alarm-major); }
+.alarm-item.minor    { border-left-color: var(--alarm-minor); }
+
+.alarm-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.critical .alarm-icon { background: rgba(239, 68, 68, 0.1); color: var(--alarm-critical); }
+.major .alarm-icon    { background: rgba(245, 158, 11, 0.1); color: var(--alarm-major); }
+.minor .alarm-icon    { background: rgba(59, 130, 246, 0.1); color: var(--alarm-minor); }
+
+.alarm-content { flex: 1; min-width: 0; }
+.alarm-header { display: flex; justify-content: space-between; margin-bottom: 2px; }
+.alarm-bts { font-weight: 600; font-size: 12px; color: var(--text-primary); }
+.alarm-time { font-size: 10px; color: var(--text-muted); }
+.alarm-type { font-size: 10px; font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
+.alarm-msg { font-size: 11px; color: var(--text-secondary); }
+
+/* Progress Bars for Utilization */
+.progress-bar {
+  height: 6px;
+  background: var(--bg-secondary);
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.progress-fill {
+  height: 100%;
+  transition: width 0.5s ease-in-out;
+}
+
+.progress-fill.low      { background: var(--status-up); }
+.progress-fill.major    { background: var(--status-degraded); }
+.progress-fill.critical { background: var(--status-down); }
+
+/* Table Adjustments */
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-box svg {
+  position: absolute;
+  left: 10px;
+  color: var(--text-muted);
+}
+
+.search-box input {
+  padding-left: 32px;
+  width: 240px;
+}
+
+/* Layout */

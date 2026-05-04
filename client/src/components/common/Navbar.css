@@ -1,0 +1,89 @@
+.navbar {
+  height: 64px;
+  background: var(--bg-navbar);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(12px);
+}
+
+.navbar-left { flex: 1; min-width: 0; }
+.navbar-title { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+.navbar-subtitle { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+.navbar-center { flex: 1; max-width: 380px; }
+
+.search-form { position: relative; }
+
+.navbar-center .search-icon {
+  position: absolute;
+  left: 10px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 7px 14px 7px 32px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--text-primary);
+  outline: none;
+  transition: var(--transition);
+}
+.search-input:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(0,212,255,0.1);
+}
+.search-input::placeholder { color: var(--text-muted); }
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.theme-toggle { transition: var(--transition); }
+.theme-toggle:hover { color: var(--brand-primary); }
+
+.sync-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--status-up);
+  margin-right: 8px;
+}
+
+.sync-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--status-up);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--status-up);
+  animation: pulse-sync 2s infinite;
+}
+
+@keyframes pulse-sync {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.6; }
+}
+
+@media (max-width: 768px) {
+  .navbar-center, .sync-indicator { display: none; }
+}
