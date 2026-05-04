@@ -13,6 +13,7 @@ import UsersPage from './pages/Users';
 import SettingsPage from './pages/Settings';
 import NocDashboard from './pages/NocDashboard';
 import NocManager from './pages/NocManager';
+import AlarmsPage from './pages/Alarms';
 import DevicesPage from './pages/Devices';
 import ResetPasswordPage from './pages/ResetPassword';
 import api from './api/axios';
@@ -26,6 +27,7 @@ import './pages/Reports.css';
 import './pages/Users.css';
 import './pages/Settings.css';
 import './pages/Devices.css';
+import './pages/Alarms.css';
 
 function AppRoutes() {
   return (
@@ -44,6 +46,7 @@ function AppRoutes() {
         <Route path="noc-supervisor" element={<NocDashboard />} />
         <Route path="noc-manager"    element={<NocManager />} />
         <Route path="devices"        element={<DevicesPage />} />
+        <Route path="alarms"         element={<AlarmsPage />} />
         <Route path="*"          element={<Navigate to="/dashboard" replace />} />
       </Route>
     </Routes>
