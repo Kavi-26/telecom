@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { 
-  ShieldAlert, AlertTriangle, Info, 
-  Activity, Bell, Mail, RefreshCw, 
+import {
+  ShieldAlert, AlertTriangle, Info,
+  Activity, Bell, Mail, RefreshCw,
   CheckCircle2, Clock, Search,
   ArrowUpRight, ArrowDownRight, Zap,
   Radio, HardDrive, Network, LayoutDashboard,
@@ -34,26 +34,53 @@ export default function NocDashboard() {
     try {
       // Attempt to fetch real data, fallback to mock if API fails
       let ranData, coreData, transportData, alarmsData;
-      
+
       try {
         const res = await api.get('/ran/bts');
-        ranData = res.data;
+        ranData = res.data.map(b => ({
+          ...b,
+          type: b.technology || 'BTS',
+          vendor: b.vendor || 'Generic',
+          utilization: b.capacity_utilization || b.utilization || 45
+        }));
       } catch { ranData = generateBTSData(); }
 
       try {
         const res = await api.get('/core/elements');
-        coreData = res.data;
+        coreData = res.data.map(e => ({
+          ...e,
+          type: e.type || 'Core Node',
+          vendor: e.vendor || 'Generic',
+          utilization: e.utilization || Math.floor(Math.random() * 40) + 20
+        }));
       } catch { coreData = generateCoreElements(); }
 
       try {
         const res = await api.get('/transport/links');
-        transportData = res.data;
+        transportData = res.data.map(t => ({
+          ...t,
+          name: `${t.node_a} - ${t.node_b}`,
+          type: t.link_type || 'Link',
+          vendor: t.vendor || 'Generic',
+          utilization: t.bandwidth_total ? Math.round((t.bandwidth_used / t.bandwidth_total) * 100) : 45
+        }));
       } catch { transportData = generateTransportLinks(); }
 
       try {
         const res = await api.get('/alarms');
-        alarmsData = res.data;
-      } catch { 
+        alarmsData = res.data.map(a => ({
+          id: a.id,
+          domain: a.domain,
+          name: a.element_name,
+          element: a.element_name,
+          bts: a.element_name,
+          severity: a.priority,
+          message: a.description,
+          type: a.description?.toLowerCase().includes('down') ? 'Outage' : a.description?.toLowerCase().includes('capacity') ? 'Congestion' : 'Alert',
+          time: new Date(a.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          status: a.status
+        }));
+      } catch {
         alarmsData = [
           ...generateRanAlarms().map(a => ({ ...a, domain: 'RAN' })),
           ...generateCoreAlarms().map(a => ({ ...a, domain: 'CORE' })),
@@ -87,8 +114,7 @@ export default function NocDashboard() {
 
   const handleAction = async (id, action) => {
     try {
-      // In a real app, we'd call the API
-      // await api.put(`/alarms/${id}/${action}`);
+      await api.put(`/alarms/${id}/${action}`);
       showToast(`Alarm ${id} ${action === 'acknowledge' ? 'acknowledged' : 'resolved'} successfully`, 'success');
       fetchData();
     } catch (err) {
@@ -100,7 +126,7 @@ export default function NocDashboard() {
   const handleExport = (type) => {
     const columns = [
       { header: 'Domain', dataKey: 'domain' },
-      { header: 'Element', dataKey: 'bts' || 'element' || 'link' },
+      { header: 'Element', dataKey: 'element' },
       { header: 'Type', dataKey: 'type' },
       { header: 'Severity', dataKey: 'severity' },
       { header: 'Message', dataKey: 'message' },
@@ -109,7 +135,7 @@ export default function NocDashboard() {
 
     const exportData = data.alarms.map(a => ({
       domain: a.domain || 'N/A',
-      element: a.bts || a.element || a.link || 'N/A',
+      element: a.element || a.bts || a.link || a.name || 'N/A',
       type: a.type,
       severity: a.severity,
       message: a.message,
@@ -131,16 +157,18 @@ export default function NocDashboard() {
     // Safe search RAN
     (data.ran || []).forEach(b => {
       const name = b.name || '';
-      if (name.toLowerCase().includes(query)) {
-        results.push({ id: b.id, name: name, category: 'Device', domain: 'RAN', icon: <Radio size={14} />, path: '/ran' });
+      const location = (b.lat && b.lng) ? `${Number(b.lat).toFixed(3)}, ${Number(b.lng).toFixed(3)}` : '';
+      if (name.toLowerCase().includes(query) || location.includes(query)) {
+        results.push({ id: b.id, name: name, category: 'Device', domain: 'RAN', icon: <Radio size={14} />, path: '/ran', desc: location });
       }
     });
 
     // Safe search CORE
     (data.core || []).forEach(e => {
       const name = e.name || '';
-      if (name.toLowerCase().includes(query)) {
-        results.push({ id: e.id, name: name, category: 'Element', domain: 'CORE', icon: <HardDrive size={14} />, path: '/core' });
+      const location = e.lat ? `${Number(e.lat).toFixed(3)}, ${Number(e.lng).toFixed(3)}` : '';
+      if (name.toLowerCase().includes(query) || location.includes(query)) {
+        results.push({ id: e.id, name: name, category: 'Element', domain: 'CORE', icon: <HardDrive size={14} />, path: '/core', desc: location });
       }
     });
 
@@ -212,9 +240,9 @@ export default function NocDashboard() {
                 </linearGradient>
               </defs>
               <circle className="gauge-bg" cx="50" cy="50" r="45" />
-              <circle 
-                className="gauge-val" 
-                cx="50" cy="50" r="45" 
+              <circle
+                className="gauge-val"
+                cx="50" cy="50" r="45"
                 strokeDasharray={`${healthScore * 2.82} 282`}
                 stroke="url(#gaugeGradient)"
               />
@@ -231,7 +259,7 @@ export default function NocDashboard() {
             </div>
             <h2>Holistic Network Visibility</h2>
             <p>
-              Consolidated view of <strong>{(data.ran?.length || 0) + (data.core?.length || 0) + (data.transport?.length || 0)}</strong> managed elements. 
+              Consolidated view of <strong>{(data.ran?.length || 0) + (data.core?.length || 0) + (data.transport?.length || 0)}</strong> managed elements.
               Active incidents are currently affecting {((data.alarms?.length || 0) / Math.max(1, (data.ran?.length || 0) + (data.core?.length || 0) + (data.transport?.length || 0)) * 100).toFixed(1)}% of infrastructure.
             </p>
             <div className="domain-health-bars">
@@ -304,8 +332,8 @@ export default function NocDashboard() {
         <div className="panel-header">
           <h2><Bell size={18} /> Critical Incident Feed</h2>
           <div className="card-actions">
-             <button className="btn btn-secondary btn-sm" onClick={() => handleExport('excel')}><Download size={14} /> Excel</button>
-             <button className="btn btn-secondary btn-sm" onClick={() => handleExport('pdf')}><Download size={14} /> PDF</button>
+            <button className="btn btn-secondary btn-sm" onClick={() => handleExport('excel')}><Download size={14} /> Excel</button>
+            <button className="btn btn-secondary btn-sm" onClick={() => handleExport('pdf')}><Download size={14} /> PDF</button>
           </div>
         </div>
         <div className="noc-table-container">
@@ -325,9 +353,9 @@ export default function NocDashboard() {
                 <tr key={alarm.id} className="alarm-row">
                   <td>
                     <span className={`domain-chip ${alarm.domain?.toLowerCase() || 'ran'}`}>
-                      {alarm.domain?.toLowerCase() === 'ran' ? <Radio size={10} style={{ marginRight: '6px' }} /> : 
-                       alarm.domain?.toLowerCase() === 'core' ? <HardDrive size={10} style={{ marginRight: '6px' }} /> : 
-                       <Network size={10} style={{ marginRight: '6px' }} />}
+                      {alarm.domain?.toLowerCase() === 'ran' ? <Radio size={10} style={{ marginRight: '6px' }} /> :
+                        alarm.domain?.toLowerCase() === 'core' ? <HardDrive size={10} style={{ marginRight: '6px' }} /> :
+                          <Network size={10} style={{ marginRight: '6px' }} />}
                       {alarm.domain || 'RAN'}
                     </span>
                   </td>
@@ -445,18 +473,20 @@ export default function NocDashboard() {
 
   return (
     <div className="noc-dashboard-modern">
+      <Navbar
+        title="NOC Supervisor Control"
+        subtitle="Unified network monitoring and incident response"
+        onRefresh={fetchData}
+      />
+
       <div className="noc-header">
-        <div className="noc-actions">
-          <div className="noc-title-area">
-            <h1><ShieldAlert className="text-brand" size={28} /> NOC Supervisor Control</h1>
-          </div>
-          
-          <div className="search-container">
+        <div className="noc-actions" style={{ justifyContent: 'space-between' }}>
+          <div className="search-container" style={{ maxWidth: '600px', width: '100%' }}>
             <div className="search-bar">
               <Search className="search-icon" size={18} />
-              <input 
-                type="text" 
-                placeholder="Search BTS, Core Nodes, IP Routers or Alarms..." 
+              <input
+                type="text"
+                placeholder="Search BTS, Core Nodes, IP Routers or Alarms..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
