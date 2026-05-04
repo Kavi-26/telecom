@@ -104,6 +104,29 @@ export default function RANPage() {
     };
 
     fetchData();
+
+    // Real-time metric simulation
+    const interval = setInterval(() => {
+      setBtsList(prev => prev.map(bts => {
+        if (bts.status === 'down') {
+          return { ...bts, utilization: 0, rsrp: -120, sinr: 0 };
+        }
+        
+        // Fluctuations
+        const utilChange = (Math.random() * 4 - 2);
+        const rsrpChange = (Math.random() * 2 - 1);
+        const sinrChange = (Math.random() * 1 - 0.5);
+
+        return {
+          ...bts,
+          utilization: Math.min(100, Math.max(0, (bts.utilization || 64) + utilChange)),
+          rsrp: Math.min(-60, Math.max(-120, (bts.rsrp || -88) + rsrpChange)),
+          sinr: Math.min(30, Math.max(0, (bts.sinr || 15) + sinrChange))
+        };
+      }));
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleExport = (type) => {
@@ -129,6 +152,13 @@ export default function RANPage() {
       (bts.vendor && bts.vendor.toLowerCase().includes(searchTerm.toLowerCase()))
     );
   }, [btsList, searchTerm]);
+
+  const getUtilColor = (val) => {
+    if (val > 85) return '#ef4444'; // Red
+    if (val > 70) return '#f59e0b'; // Amber
+    if (val > 50) return '#facc15'; // Yellow
+    return '#22c55e'; // Green
+  };
 
   const stats = useMemo(() => [
     { label: 'Total BTS', value: btsList.length, icon: <Radio size={20} />, trend: '+0', trendUp: true, color: 'var(--brand-primary)' },
@@ -394,13 +424,12 @@ export default function RANPage() {
           <div className="card-header">
             <div className="card-title">BTS Device Status & Inventory</div>
             <div className="card-actions">
-              <div className="search-box" style={{ position: 'relative' }}>
-                <Search size={16} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+              <div className="search-box">
+                <Search size={16} />
                 <input
                   type="text"
                   placeholder="Search BTS..."
                   className="form-input"
-                  style={{ paddingLeft: '32px', width: '200px' }}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -435,14 +464,34 @@ export default function RANPage() {
                     </td>
                     <td><span className="domain-pill ran" style={{ fontSize: '10px' }}>{bts.technology}</span></td>
                     <td>{bts.vendor || 'N/A'}</td>
-                    <td style={{ color: bts.rsrp < -100 ? 'var(--status-down)' : 'inherit' }}>{bts.rsrp || '-88'} dBm</td>
-                    <td>{bts.sinr || '15'} dB</td>
+                    <td style={{ 
+                      color: bts.status === 'down' || bts.rsrp < -100 ? '#ef4444' : bts.rsrp < -90 ? '#f59e0b' : '#22c55e',
+                      fontWeight: 700 
+                    }}>
+                      {bts.status === 'down' ? 'OFFLINE' : `${Math.round(bts.rsrp)} dBm`}
+                    </td>
+                    <td style={{ 
+                      color: bts.status === 'down' || bts.sinr < 5 ? '#ef4444' : bts.sinr < 12 ? '#f59e0b' : '#22c55e',
+                      fontWeight: 600 
+                    }}>
+                      {bts.status === 'down' ? '0' : Math.round(bts.sinr)} dB
+                    </td>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div className="progress-bar" style={{ width: '60px' }}>
-                          <div className="progress-fill low" style={{ width: '64%' }}></div>
+                        <div className="progress-bar" style={{ width: '60px', background: 'var(--bg-secondary)', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
+                          <div 
+                            className="progress-fill" 
+                            style={{ 
+                              width: `${bts.utilization || 64}%`,
+                              height: '100%',
+                              background: getUtilColor(bts.utilization || 64),
+                              transition: 'all 0.5s ease'
+                            }}
+                          ></div>
                         </div>
-                        <span>64%</span>
+                        <span style={{ fontSize: '12px', fontWeight: 600, minWidth: '35px' }}>
+                          {Math.round(bts.utilization || 64)}%
+                        </span>
                       </div>
                     </td>
                     <td style={{ color: 'var(--text-muted)' }}>Just now</td>

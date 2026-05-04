@@ -417,15 +417,23 @@ export default function TransportPage() {
                     <td>{link.bandwidth} Gbps</td>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div className="progress-bar" style={{ width: '100px' }}>
-                          <div className={`progress-fill ${link.utilization > 80 ? 'critical' : link.utilization > 60 ? 'major' : 'low'}`} style={{ width: `${link.utilization}%` }}></div>
+                        <div className="progress-bar" style={{ width: '100px', background: 'var(--bg-secondary)', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
+                          <div 
+                            className="progress-fill" 
+                            style={{ 
+                              width: `${link.utilization}%`,
+                              height: '100%',
+                              background: getLinkColor(link),
+                              transition: 'all 0.5s ease'
+                            }}
+                          ></div>
                         </div>
-                        <span style={{ fontSize: '12px', fontWeight: 600 }}>{link.utilization}%</span>
+                        <span style={{ fontSize: '12px', fontWeight: 600, minWidth: '40px' }}>{link.utilization}%</span>
                       </div>
                     </td>
                     <td>
                       <span style={{ color: getLinkColor(link), fontWeight: 700, fontSize: '11px' }}>
-                        {link.status === 'down' ? 'CRITICAL' : link.utilization > 85 ? 'CONGESTED' : 'HEALTHY'}
+                        {link.status === 'down' ? 'CRITICAL' : link.utilization > 85 ? 'CONGESTED' : link.utilization > 70 ? 'WARNING' : 'HEALTHY'}
                       </span>
                     </td>
                   </tr>

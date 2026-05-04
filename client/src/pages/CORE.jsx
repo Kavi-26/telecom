@@ -78,6 +78,26 @@ export default function COREPage() {
     };
 
     fetchData();
+
+    // Real-time metric simulation
+    const interval = setInterval(() => {
+      setElements(prev => prev.map(el => {
+        if (el.status === 'down') {
+          return { ...el, load: 0, latency: 0 };
+        }
+
+        const loadChange = (Math.random() * 4 - 2);
+        const latencyChange = (Math.random() * 2 - 1);
+
+        return {
+          ...el,
+          load: Math.min(100, Math.max(0, (el.load || 45) + loadChange)),
+          latency: Math.min(20, Math.max(1, (el.latency || 6) + latencyChange))
+        };
+      }));
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, []);
   
   const handleExport = (type) => {
@@ -101,6 +121,13 @@ export default function COREPage() {
       el.type.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [elements, searchTerm]);
+
+  const getLoadColor = (val) => {
+    if (val > 85) return '#ef4444'; // Red
+    if (val > 70) return '#f59e0b'; // Amber
+    if (val > 50) return '#facc15'; // Yellow
+    return '#22c55e'; // Green
+  };
 
   const stats = useMemo(() => [
     { label: 'Core Elements', value: elements.length, icon: <Server size={20} />, trend: 'Steady', trendUp: true, color: 'var(--domain-core)' },
@@ -271,13 +298,12 @@ export default function COREPage() {
           <div className="card-header">
             <div className="card-title">Core Elements Inventory & KPIs</div>
             <div className="card-actions">
-              <div className="search-box" style={{ position: 'relative' }}>
-                <Search size={16} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+              <div className="search-box">
+                <Search size={16} />
                 <input
                   type="text"
                   placeholder="Search elements..."
                   className="form-input"
-                  style={{ paddingLeft: '32px', width: '200px' }}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -311,14 +337,31 @@ export default function COREPage() {
                       </span>
                     </td>
                     <td>{el.vendor}</td>
-                    <td>{4 + Math.floor(Math.random() * 5)} ms</td>
-                    <td>99.9%</td>
+                    <td style={{ 
+                      color: el.status === 'down' ? '#ef4444' : el.latency > 15 ? '#ef4444' : el.latency > 10 ? '#f59e0b' : '#22c55e',
+                      fontWeight: 700 
+                    }}>
+                      {el.status === 'down' ? 'OFFLINE' : `${Math.round(el.latency)} ms`}
+                    </td>
+                    <td style={{ color: el.status === 'down' ? '#ef4444' : '#22c55e', fontWeight: 600 }}>
+                      {el.status === 'down' ? '0%' : '99.9%'}
+                    </td>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div className="progress-bar" style={{ width: '60px' }}>
-                          <div className="progress-fill low" style={{ width: '45%' }}></div>
+                        <div className="progress-bar" style={{ width: '60px', background: 'var(--bg-secondary)', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
+                          <div 
+                            className="progress-fill" 
+                            style={{ 
+                              width: `${el.load || 45}%`,
+                              height: '100%',
+                              background: getLoadColor(el.load || 45),
+                              transition: 'all 0.5s ease'
+                            }}
+                          ></div>
                         </div>
-                        <span>45%</span>
+                        <span style={{ fontSize: '12px', fontWeight: 600, minWidth: '35px' }}>
+                          {Math.round(el.load || 45)}%
+                        </span>
                       </div>
                     </td>
                     <td>
@@ -405,11 +448,6 @@ export default function COREPage() {
                   </ResponsiveContainer>
                 </div>
               </div>
-            </div>
-
-            <div className="modal-footer">
-              <button className="btn btn-secondary" onClick={() => setSelectedElement(null)}>Close</button>
-              <button className="btn btn-primary" onClick={() => navigate('/devices')}>Manage Asset</button>
             </div>
           </div>
         </div>

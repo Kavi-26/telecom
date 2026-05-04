@@ -78,7 +78,7 @@ export default function Devices() {
       />
 
       <div className="devices-header">
-        <div className="header-actions" style={{ width: '100%', justifyContent: 'space-between' }}>
+        <div className="header-actions">
           <div className="search-box">
             <Search size={18} className="search-icon" />
             <input 
@@ -88,7 +88,7 @@ export default function Devices() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <div className="button-group">
             <button className="btn btn-secondary btn-sm" onClick={() => handleExport('excel')}>Excel</button>
             <button className="btn btn-secondary btn-sm" onClick={() => handleExport('pdf')}>PDF</button>
           </div>
