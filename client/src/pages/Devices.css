@@ -36,7 +36,7 @@
   gap: 1rem;
   flex: 1;
   justify-content: space-between;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .button-group {

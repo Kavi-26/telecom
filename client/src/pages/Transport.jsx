@@ -21,11 +21,12 @@ import {
 import { 
   MapContainer, 
   TileLayer, 
-  Marker, 
+  Polyline, 
   Popup, 
-  Polyline,
-  CircleMarker
+  CircleMarker,
+  LayersControl 
 } from 'react-leaflet';
+import { useTheme } from '../contexts/ThemeContext';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { 
@@ -54,6 +55,7 @@ import './Transport.css';
 export default function TransportPage() {
   const [loading, setLoading] = useState(true);
   const [nodes, setNodes] = useState([]);
+  const { theme } = useTheme();
   const [links, setLinks] = useState([]);
   const [perfData, setPerfData] = useState([]);
   const [alarms, setAlarms] = useState([]);
@@ -348,16 +350,38 @@ export default function TransportPage() {
             </div>
             <div style={{ flex: 1, zIndex: 1, minHeight: '400px' }}>
               <MapContainer 
+                key={theme}
                 center={[-2.5489, 118.0149]} 
                 zoom={5} 
                 style={{ height: '100%', width: '100%' }}
                 scrollWheelZoom={false}
               >
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  className="map-tiles"
-                />
+                <LayersControl position="topright">
+                  <LayersControl.BaseLayer checked={theme !== 'light'} name="Dark Mode">
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                      url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                    />
+                  </LayersControl.BaseLayer>
+                  <LayersControl.BaseLayer checked={theme === 'light'} name="Light Mode">
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                      url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                    />
+                  </LayersControl.BaseLayer>
+                  <LayersControl.BaseLayer name="Satellite">
+                    <TileLayer
+                      attribution='&copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                      url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                    />
+                  </LayersControl.BaseLayer>
+                  <LayersControl.BaseLayer name="Terrain">
+                    <TileLayer
+                      attribution='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+                      url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
+                    />
+                  </LayersControl.BaseLayer>
+                </LayersControl>
                 
                 {/* Draw Links */}
                 {links.map(link => (

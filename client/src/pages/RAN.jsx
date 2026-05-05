@@ -27,8 +27,10 @@ import {
   TileLayer,
   Marker,
   Popup,
-  Circle
+  Circle,
+  LayersControl
 } from 'react-leaflet';
+import { useTheme } from '../contexts/ThemeContext';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {
@@ -64,6 +66,7 @@ let DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 export default function RANPage() {
+  const { theme } = useTheme();
   const [activeBts, setActiveBts] = useState(null);
   const [loading, setLoading] = useState(true);
   const [btsList, setBtsList] = useState([]);
@@ -193,7 +196,7 @@ export default function RANPage() {
 
   const stats = useMemo(() => [
     { label: 'Total BTS', value: btsList.length, icon: <Radio size={20} />, trend: '+0', trendUp: true, color: 'var(--brand-primary)' },
-    { label: 'Active Cells', value: btsList.filter(b => b.status === 'up').length, icon: <Wifi size={20} />, trend: '98.2%', trendUp: true, color: 'var(--status-up)' },
+    { label: 'Active BTS', value: btsList.filter(b => b.status === 'up').length, icon: <Wifi size={20} />, trend: '98.2%', trendUp: true, color: 'var(--status-up)' },
     { label: 'Avg Signal', value: '-88 dBm', icon: <Signal size={20} />, trend: '-2.4', trendUp: false, color: 'var(--brand-accent)' },
     { label: 'Avg Util', value: '64.2%', icon: <Activity size={20} />, trend: '+5.1%', trendUp: false, color: 'var(--domain-ran)' },
   ], [btsList]);
@@ -411,16 +414,38 @@ export default function RANPage() {
             </div>
             <div style={{ flex: 1, zIndex: 1, minHeight: '400px' }}>
               <MapContainer
+                key={theme}
                 center={[19.0760, 72.8777]}
                 zoom={11}
                 style={{ height: '100%', width: '100%' }}
                 scrollWheelZoom={false}
               >
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  className="map-tiles"
-                />
+                <LayersControl position="topright">
+                  <LayersControl.BaseLayer checked={theme !== 'light'} name="Dark Mode">
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                      url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                    />
+                  </LayersControl.BaseLayer>
+                  <LayersControl.BaseLayer checked={theme === 'light'} name="Light Mode">
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                      url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                    />
+                  </LayersControl.BaseLayer>
+                  <LayersControl.BaseLayer name="Satellite">
+                    <TileLayer
+                      attribution='&copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                      url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                    />
+                  </LayersControl.BaseLayer>
+                  <LayersControl.BaseLayer name="Terrain">
+                    <TileLayer
+                      attribution='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+                      url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
+                    />
+                  </LayersControl.BaseLayer>
+                </LayersControl>
                 {btsList.map(bts => (
                   <Marker
                     key={bts.id}

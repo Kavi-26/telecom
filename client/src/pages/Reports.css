@@ -26,14 +26,14 @@
   margin-bottom: 2rem;
   backdrop-filter: blur(20px);
   box-shadow: var(--shadow-lg);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 1.5rem;
 }
 
 .filter-group {
   display: flex;
   gap: 2rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .filter-item {

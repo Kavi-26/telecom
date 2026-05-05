@@ -4,7 +4,7 @@
 }
 
 .map-tiles {
-  filter: grayscale(1) invert(1) contrast(1.2) brightness(0.6) hue-rotate(180deg);
+  /* Filters removed in favor of native themed tiles */
 }
 
 .map-legend {
