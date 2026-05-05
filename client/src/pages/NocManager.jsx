@@ -198,7 +198,7 @@ export default function NocManager() {
                       <td>
                         <span className={`prio-pill ${alarm.priority}`}>{alarm.priority.toUpperCase()}</span>
                       </td>
-                      <td><span className="domain-chip">{alarm.domain}</span></td>
+                      <td><span className={`domain-pill ${alarm.domain?.toLowerCase()}`}>{alarm.domain}</span></td>
                       <td><strong>{alarm.element_name}</strong></td>
                       <td className="desc-cell">{alarm.description}</td>
                        <td>{calculateDuration(alarm.created_at || alarm.timestamp)}</td>
