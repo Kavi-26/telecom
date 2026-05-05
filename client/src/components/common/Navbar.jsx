@@ -33,7 +33,7 @@ export default function Navbar({ title, subtitle, onRefresh }) {
           title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
           id="theme-toggle"
         >
-          {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          {theme === 'dark' ? <Moon size={18} fill="currentColor" /> : <Sun size={18} fill="currentColor" />}
         </button>
       </div>
     </header>

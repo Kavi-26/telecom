@@ -52,6 +52,7 @@
   --bg-card-hover: #1a2440;
   --bg-input: #0d1525;
   --bg-sidebar: #0d1525;
+  --bg-sidebar-hover: rgba(255, 255, 255, 0.05);
   --bg-navbar: rgba(10, 14, 26, 0.95);
   --border: rgba(255,255,255,0.06);
   --border-hover: rgba(0,212,255,0.3);
@@ -75,7 +76,8 @@
   --bg-card: #ffffff;
   --bg-card-hover: #f8fafc;
   --bg-input: #f8fafc;
-  --bg-sidebar: #1e293b;
+  --bg-sidebar: #ffffff;
+  --bg-sidebar-hover: rgba(0, 0, 0, 0.05);
   --bg-navbar: rgba(255,255,255,0.95);
   --border: rgba(0,0,0,0.08);
   --border-hover: rgba(0,212,255,0.4);
@@ -83,8 +85,8 @@
   --text-secondary: #475569;
   --text-muted: #94a3b8;
   --text-inverse: #f1f5f9;
-  --sidebar-text: #f1f5f9;
-  --sidebar-text-muted: #94a3b8;
+  --sidebar-text: #1e293b;
+  --sidebar-text-muted: #64748b;
   --chart-grid: rgba(0,0,0,0.06);
   --scrollbar-track: #e8eef5;
   --scrollbar-thumb: #cbd5e1;

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Bot, User, Minimize2, Maximize2 } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, User, Minimize2, Maximize2, Radio } from 'lucide-react';
 import './ChatBox.css';
 
 // Hard-coded GenAI response engine
@@ -159,7 +159,7 @@ export default function ChatBox({ domain = 'general' }) {
           title="Open AI Assistant"
           id="chat-fab"
         >
-          <MessageCircle size={22} />
+          <Radio size={22} />
           <span className="chat-fab-badge">AI</span>
         </button>
       )}
@@ -173,7 +173,7 @@ export default function ChatBox({ domain = 'general' }) {
                 <Bot size={16} />
               </div>
               <div>
-                <span className="chat-bot-name">TelcoAI Assistant</span>
+                <span className="chat-bot-name">Network Insight AI</span>
                 <span className="chat-bot-status">
                   <span className="status-dot up" />
                   Online · {domain !== 'general' ? domain.toUpperCase() : 'All domains'}

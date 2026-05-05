@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Eye, EyeOff, Wifi, AlertCircle, Lock, User, ChevronRight } from 'lucide-react';
+import { Eye, EyeOff, Wifi, AlertCircle, Lock, User, ChevronRight, Moon, Sun } from 'lucide-react';
 import './Login.css';
 import loginBg from '../assets/login-bg.png';
 import logo from '../assets/logo.png';
+import { useTheme } from '../contexts/ThemeContext';
 
 const ROLE_REDIRECTS = {
   admin: '/dashboard',
@@ -19,6 +20,7 @@ const ROLE_REDIRECTS = {
 
 const NetworkBackground = () => {
   const canvasRef = useRef(null);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -51,9 +53,9 @@ const NetworkBackground = () => {
       draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(0, 212, 255, 0.6)';
+        ctx.fillStyle = theme === 'dark' ? 'rgba(0, 212, 255, 0.6)' : 'rgba(0, 102, 255, 0.6)';
         ctx.shadowBlur = 15;
-        ctx.shadowColor = 'rgba(0, 212, 255, 1)';
+        ctx.shadowColor = theme === 'dark' ? 'rgba(0, 212, 255, 1)' : 'rgba(0, 102, 255, 0.4)';
         ctx.fill();
         ctx.shadowBlur = 0; // reset for lines
       }
@@ -83,7 +85,8 @@ const NetworkBackground = () => {
           
           if (distance < 160) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(0, 212, 255, ${0.2 * (1 - distance/160)})`;
+            const color = theme === 'dark' ? '0, 212, 255' : '0, 102, 255';
+            ctx.strokeStyle = `rgba(${color}, ${0.2 * (1 - distance/160)})`;
             ctx.lineWidth = 1.5;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
@@ -100,13 +103,14 @@ const NetworkBackground = () => {
       window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [theme]);
 
   return <canvas ref={canvasRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, pointerEvents: 'none' }} />;
 };
 
 export default function LoginPage() {
   const { login } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: '', password: '' });
   const [showPw, setShowPw] = useState(false);
@@ -285,9 +289,15 @@ export default function LoginPage() {
           )}
         </div>
 
-        <p className="login-footer">
-          © 2026 TelcoVision · All systems monitored
-        </p>
+        <div className="login-footer-actions">
+          <p className="login-footer">
+            © 2026 TelcoVision · All systems monitored
+          </p>
+          <button className="login-theme-toggle" onClick={toggleTheme}>
+            {theme === 'dark' ? <Moon size={14} /> : <Sun size={14} />}
+            {theme === 'dark' ? 'Dark Mode' : 'Light Mode'}
+          </button>
+        </div>
       </div>
     </div>
   );

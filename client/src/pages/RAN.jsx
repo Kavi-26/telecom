@@ -419,6 +419,7 @@ export default function RANPage() {
                 zoom={11}
                 style={{ height: '100%', width: '100%' }}
                 scrollWheelZoom={false}
+                attributionControl={false}
               >
                 <LayersControl position="topright">
                   <LayersControl.BaseLayer checked={theme !== 'light'} name="Dark Mode">

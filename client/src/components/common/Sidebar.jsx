@@ -91,16 +91,15 @@ export default function Sidebar({ collapsed, setCollapsed }) {
             )}
           </div>
         )}
-        <div style={{ display: 'flex', gap: '4px', flexDirection: collapsed ? 'column' : 'row' }}>
-          <button
-            className="logout-btn"
-            onClick={toggleTheme}
-            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-            style={{ flex: 1 }}
-          >
-            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-            {!collapsed && <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>}
-          </button>
+        <div style={{ display: 'flex', gap: '4px', flexDirection: 'column' }}>
+          <div className={`theme-toggle-container ${collapsed ? 'collapsed' : ''}`} onClick={toggleTheme}>
+            <div className={`theme-switch ${theme}`}>
+              <div className="switch-thumb">
+                {theme === 'dark' ? <Moon size={12} fill="currentColor" /> : <Sun size={12} fill="currentColor" />}
+              </div>
+            </div>
+            {!collapsed && <span className="toggle-label">{theme === 'dark' ? 'Dark Mode' : 'Light Mode'}</span>}
+          </div>
 
           <button
             className="logout-btn"
