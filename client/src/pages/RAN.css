@@ -42,6 +42,100 @@
   opacity: 0.9;
 }
 
+/* Compact Stat Cards Overrides */
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.stat-card {
+  padding: 1rem 1.25rem !important;
+  min-height: auto !important;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px !important;
+}
+
+.stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0 !important;
+}
+
+.stat-label {
+  font-size: 0.7rem !important;
+  font-weight: 700 !important;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-value {
+  font-size: 1.5rem !important;
+  font-weight: 850 !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+}
+
+.stat-trend {
+  padding: 0.25rem 0.5rem !important;
+  font-size: 0.65rem !important;
+  border-radius: 6px !important;
+}
+
+.stat-icon {
+  position: absolute;
+  right: -10px;
+  bottom: -10px;
+  opacity: 0.08;
+  transform: scale(1.5) rotate(-15deg);
+  pointer-events: none;
+}
+
+/* Filter Dropdown */
+.filter-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 200px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.75rem;
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-option {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filter-option:hover {
+  background: var(--bg-secondary);
+}
+
+.filter-option.active {
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--brand-primary);
+  font-weight: 600;
+}
+
 /* Stat Cards are handled by global classes in index.css, 
    but we can add RAN specific overrides if needed */
 

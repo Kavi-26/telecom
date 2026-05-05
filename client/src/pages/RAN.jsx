@@ -70,6 +70,11 @@ export default function RANPage() {
   const [alarms, setAlarms] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBts, setSelectedBts] = useState(null);
+  const [showFilter, setShowFilter] = useState(false);
+  const [filters, setFilters] = useState({
+    status: 'all', // all, up, down
+    technology: 'all' // all, 4G, 5G
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -147,11 +152,16 @@ export default function RANPage() {
   };
 
   const filteredBts = useMemo(() => {
-    return btsList.filter(bts =>
-      bts.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (bts.vendor && bts.vendor.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
-  }, [btsList, searchTerm]);
+    return btsList.filter(bts => {
+      const matchesSearch = bts.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           (bts.vendor && bts.vendor.toLowerCase().includes(searchTerm.toLowerCase()));
+      
+      const matchesStatus = filters.status === 'all' || bts.status === filters.status;
+      const matchesTech = filters.technology === 'all' || bts.technology === filters.technology;
+      
+      return matchesSearch && matchesStatus && matchesTech;
+    });
+  }, [btsList, searchTerm, filters]);
 
   const getUtilColor = (val) => {
     if (val > 85) return '#ef4444'; // Red
@@ -215,12 +225,12 @@ export default function RANPage() {
               <div className="stat-header">
                 <div className="stat-label">{stat.label}</div>
                 <div className={`stat-trend ${stat.trendUp ? 'up' : 'down'}`}>
-                  {stat.trendUp ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
+                  {stat.trendUp ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />}
                   {stat.trend}
                 </div>
               </div>
               <div className="stat-value">{stat.value}</div>
-              <div className="stat-icon" style={{ '--icon-bg': `${stat.color}15`, color: stat.color }}>{stat.icon}</div>
+              <div className="stat-icon">{stat.icon}</div>
             </div>
           ))}
         </div>
@@ -434,7 +444,29 @@ export default function RANPage() {
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-              <button className="btn btn-secondary btn-sm"><Filter size={14} /> Filter</button>
+              <div style={{ position: 'relative' }}>
+                <button 
+                  className={`btn btn-secondary btn-sm ${showFilter ? 'active' : ''}`}
+                  onClick={() => setShowFilter(!showFilter)}
+                >
+                  <Filter size={14} /> Filter
+                </button>
+                {showFilter && (
+                  <div className="filter-menu">
+                    <div className="filter-section-label" style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 700, padding: '4px 8px' }}>STATUS</div>
+                    <div className={`filter-option ${filters.status === 'all' ? 'active' : ''}`} onClick={() => setFilters({...filters, status: 'all'})}>All Status</div>
+                    <div className={`filter-option ${filters.status === 'up' ? 'active' : ''}`} onClick={() => setFilters({...filters, status: 'up'})}>Up (Online)</div>
+                    <div className={`filter-option ${filters.status === 'down' ? 'active' : ''}`} onClick={() => setFilters({...filters, status: 'down'})}>Down (Offline)</div>
+                    
+                    <div className="filter-divider" style={{ height: '1px', background: 'var(--border)', margin: '4px 0' }}></div>
+                    
+                    <div className="filter-section-label" style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 700, padding: '4px 8px' }}>TECHNOLOGY</div>
+                    <div className={`filter-option ${filters.technology === 'all' ? 'active' : ''}`} onClick={() => setFilters({...filters, technology: 'all'})}>All Tech</div>
+                    <div className={`filter-option ${filters.technology === '4G' ? 'active' : ''}`} onClick={() => setFilters({...filters, technology: '4G'})}>4G / LTE</div>
+                    <div className={`filter-option ${filters.technology === '5G' ? 'active' : ''}`} onClick={() => setFilters({...filters, technology: '5G'})}>5G (NR)</div>
+                  </div>
+                )}
+              </div>
               <button className="btn btn-secondary btn-sm" onClick={() => handleExport('excel')}><Download size={14} /> Excel</button>
               <button className="btn btn-secondary btn-sm" onClick={() => handleExport('pdf')}><Download size={14} /> PDF</button>
             </div>
