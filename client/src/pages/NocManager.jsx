@@ -34,18 +34,32 @@ export default function NocManager() {
     }
   };
 
-  const showToast = (msg) => {
-    setNotification(msg);
+  const showToast = (message, type = 'success') => {
+    setNotification({ message, type });
     setTimeout(() => setNotification(null), 3000);
   };
 
   const handleAction = async (id, action) => {
+    // Optimistic UI update
+    const previousAlarms = [...alarms];
+    
+    if (action === 'resolve') {
+      setAlarms(prev => prev.filter(a => a.id !== id));
+      showToast(`Incident #${id} has been resolved and archived`);
+    } else {
+      setAlarms(prev => prev.map(a => a.id === id ? { ...a, status: 'acknowledged' } : a));
+      showToast(`Incident #${id} acknowledged by operator`);
+    }
+
     try {
       await api.put(`/alarms/${id}/${action}`);
-      fetchData(); // Refresh list
-      showToast(`Incident successfully ${action}ed`);
+      // If backend succeeds, we don't need to do anything since we updated optimistically
+      // But we can fetch to be safe if needed
     } catch (err) {
       console.error(`Error ${action}ing alarm:`, err);
+      // Revert on error
+      setAlarms(previousAlarms);
+      showToast(`Failed to ${action} incident. Please try again.`, 'error');
     }
   };
 
@@ -180,8 +194,23 @@ export default function NocManager() {
                       <td>24m 12s</td>
                       <td>
                         <div className="action-group">
-                          <button className="icon-btn" onClick={() => handleAction(alarm.id, 'acknowledge')} title="Acknowledge"><Clock size={14} /></button>
-                          <button className="icon-btn" onClick={() => handleAction(alarm.id, 'resolve')} title="Resolve" style={{ color: '#10b981' }}><CheckCircle2 size={14} /></button>
+                          <button 
+                            className="icon-btn" 
+                            onClick={() => handleAction(alarm.id, 'acknowledge')} 
+                            title="Acknowledge"
+                            disabled={alarm.status === 'acknowledged'}
+                            style={{ opacity: alarm.status === 'acknowledged' ? 0.4 : 1 }}
+                          >
+                            <Clock size={14} />
+                          </button>
+                          <button 
+                            className="icon-btn" 
+                            onClick={() => handleAction(alarm.id, 'resolve')} 
+                            title="Resolve" 
+                            style={{ color: '#10b981' }}
+                          >
+                            <CheckCircle2 size={14} />
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -251,9 +280,9 @@ export default function NocManager() {
       </div>
 
       {notification && (
-        <div className="notification-toast">
-          <Bell size={18} />
-          {notification}
+        <div className={`notification-toast ${notification.type}`}>
+          {notification.type === 'error' ? <AlertOctagon size={18} /> : <CheckCircle2 size={18} />}
+          {notification.message}
         </div>
       )}
     </div>

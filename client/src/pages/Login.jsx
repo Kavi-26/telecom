@@ -70,10 +70,10 @@ export default function LoginPage() {
       <div className="login-container">
         <div className="login-brand">
           <div className="brand-icon">
-            <img src={logo} alt="Interactive Logo" style={{ width: '100%', height: '100%', borderRadius: 'inherit' }} />
+            <img src={logo} alt="TelcoVision Logo" style={{ width: '100%', height: '100%', borderRadius: 'inherit' }} />
           </div>
           <div>
-            <h1 className="brand-title">Interactive</h1>
+            <h1 className="brand-title">TelcoVision</h1>
             <p className="brand-subtitle">Network Element Monitoring Platform</p>
           </div>
         </div>
@@ -159,9 +159,9 @@ export default function LoginPage() {
                 <div className="alert alert-info" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <span>{forgotMsg}</span>
                   {resetToken && (
-                    <code style={{ 
-                      background: 'rgba(0,0,0,0.2)', 
-                      padding: '8px', 
+                    <code style={{
+                      background: 'rgba(0,0,0,0.2)',
+                      padding: '8px',
                       borderRadius: '4px',
                       fontSize: '0.85rem',
                       wordBreak: 'break-all',
@@ -199,7 +199,7 @@ export default function LoginPage() {
         </div>
 
         <p className="login-footer">
-          © 2026 Interactive · All systems monitored
+          © 2026 TelcoVision · All systems monitored
         </p>
       </div>
     </div>

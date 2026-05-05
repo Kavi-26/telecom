@@ -10,16 +10,16 @@ import './Sidebar.css';
 import logo from '../../assets/logo.png';
 
 const NAV_ITEMS = [
-  { to: '/dashboard', icon: LayoutDashboard, label: 'Overview', roles: ['admin','noc_manager','noc_supervisor','analyst','operator'] },
-  { to: '/ran',       icon: Radio,           label: 'RAN',      roles: ['admin','noc_supervisor','ran_engineer','analyst','operator'] },
-  { to: '/core',      icon: Server,          label: 'CORE',     roles: ['admin','noc_supervisor','core_engineer','analyst','operator'] },
-  { to: '/transport', icon: Network,         label: 'IP Transport', roles: ['admin','noc_supervisor','ip_engineer','analyst','operator'] },
-  { to: '/noc-manager',   icon: ShieldAlert,     label: 'Manager Console', roles: ['admin','noc_manager'] },
-  { to: '/noc-supervisor',icon: LayoutDashboard,  label: 'Supervisor Dashboard', roles: ['admin','noc_supervisor'] },
-  { to: '/devices',       icon: Wifi,            label: 'Devices',  roles: ['admin','operator'] },
-  { to: '/reports',       icon: BarChart2,       label: 'Reports',  roles: ['admin','analyst'] },
-  { to: '/users',         icon: User,            label: 'Users',    roles: ['admin'] },
-  { to: '/settings',      icon: Settings,        label: 'Settings', roles: ['admin'] },
+  { to: '/dashboard', icon: LayoutDashboard, label: 'Overview', roles: ['admin', 'noc_manager', 'noc_supervisor', 'analyst', 'operator'] },
+  { to: '/ran', icon: Radio, label: 'RAN', roles: ['admin', 'noc_supervisor', 'ran_engineer', 'analyst', 'operator'] },
+  { to: '/core', icon: Server, label: 'CORE', roles: ['admin', 'noc_supervisor', 'core_engineer', 'analyst', 'operator'] },
+  { to: '/transport', icon: Network, label: 'IP Transport', roles: ['admin', 'noc_supervisor', 'ip_engineer', 'analyst', 'operator'] },
+  { to: '/noc-manager', icon: ShieldAlert, label: 'Manager Console', roles: ['admin', 'noc_manager'] },
+  { to: '/noc-supervisor', icon: LayoutDashboard, label: 'Supervisor Dashboard', roles: ['admin', 'noc_supervisor'] },
+  { to: '/devices', icon: Wifi, label: 'Devices', roles: ['admin', 'operator'] },
+  { to: '/reports', icon: BarChart2, label: 'Reports', roles: ['admin', 'analyst'] },
+  { to: '/users', icon: User, label: 'Users', roles: ['admin'] },
+  { to: '/settings', icon: Settings, label: 'Settings', roles: ['admin'] },
 ];
 
 const ROLE_LABELS = {
@@ -52,7 +52,7 @@ export default function Sidebar({ collapsed, setCollapsed }) {
           <div className="logo-icon">
             <img src={logo} alt="L" style={{ width: '100%', height: '100%', borderRadius: 'inherit' }} />
           </div>
-          {!collapsed && <span className="logo-text">Interactive</span>}
+          {!collapsed && <span className="logo-text">TelcoVision</span>}
         </div>
         <button
           className="collapse-btn"

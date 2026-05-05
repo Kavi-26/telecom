@@ -31,7 +31,7 @@ export default function AppLayout() {
     return (
       <div className="app-loading">
         <div className="spinner" />
-        <p>Loading Interactive...</p>
+        <p>Loading TelcoVision...</p>
       </div>
     );
   }

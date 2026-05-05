@@ -26,11 +26,6 @@ export default function Navbar({ title, subtitle, onRefresh }) {
 
       <div className="navbar-right">
 
-        {onRefresh && (
-          <button className="btn btn-ghost btn-icon" onClick={onRefresh} title="Refresh data">
-            <RefreshCw size={16} />
-          </button>
-        )}
 
         <button
           className="btn btn-ghost btn-icon theme-toggle"

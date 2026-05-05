@@ -81,6 +81,15 @@
   backdrop-filter: blur(20px);
   box-shadow: var(--shadow-lg);
   animation: slideIn 0.4s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 @keyframes slideIn {
@@ -104,12 +113,11 @@
   font-size: 0.95rem;
 }
 
-/* Settings Form Elements */
+/* Grouped Settings */
 .settings-group {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
-  max-width: 650px;
 }
 
 .setting-row {
@@ -118,16 +126,28 @@
   gap: 0.75rem;
 }
 
+.setting-row.full-width {
+  grid-column: 1 / -1;
+}
+
 .setting-row label {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-dim);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.setting-row label i {
+  color: var(--brand-primary);
 }
 
 .setting-row input,
-.setting-row select {
+.setting-row select,
+.setting-row textarea {
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -135,6 +155,7 @@
   color: var(--text-primary);
   font-size: 1rem;
   transition: all 0.3s ease;
+  width: 100%;
 }
 
 .setting-row input:focus,

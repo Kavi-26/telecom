@@ -34,22 +34,22 @@ export const exportToPDF = (data, columns, title = 'Data Report', fileName = 'Re
 
   try {
     const doc = new jsPDF();
-    
+
     // Add Branding / Logo placeholder
     doc.setFillColor(0, 212, 255);
     doc.rect(0, 0, 210, 40, 'F');
-    
+
     doc.setFontSize(22);
     doc.setTextColor(255, 255, 255);
-    doc.text("INTERACTIVE", 14, 20);
-    
+    doc.text("TelcoVision", 14, 20);
+
     doc.setFontSize(12);
     doc.text("Network Management System", 14, 28);
-    
+
     doc.setFontSize(18);
     doc.setTextColor(0, 0, 0);
     doc.text(title, 14, 55);
-    
+
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
     doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 62);
@@ -63,19 +63,19 @@ export const exportToPDF = (data, columns, title = 'Data Report', fileName = 'Re
       body: tableData,
       startY: 75,
       margin: { top: 75 },
-      styles: { 
-        fontSize: 9, 
+      styles: {
+        fontSize: 9,
         cellPadding: 4,
         overflow: 'linebreak',
         halign: 'left'
       },
-      headStyles: { 
-        fillColor: [0, 212, 255], 
+      headStyles: {
+        fillColor: [0, 212, 255],
         textColor: 255,
         fontStyle: 'bold'
       },
-      alternateRowStyles: { 
-        fillColor: [248, 250, 252] 
+      alternateRowStyles: {
+        fillColor: [248, 250, 252]
       },
       columnStyles: {
         0: { fontStyle: 'bold' }

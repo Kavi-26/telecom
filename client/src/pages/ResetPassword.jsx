@@ -8,7 +8,7 @@ export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const token = searchParams.get('token');
-  
+
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPw, setShowPw] = useState(false);
@@ -68,7 +68,7 @@ export default function ResetPasswordPage() {
             <Wifi size={28} />
           </div>
           <div>
-            <h1 className="brand-title">Interactive</h1>
+            <h1 className="brand-title">TelcoVision</h1>
             <p className="brand-subtitle">Network Element Monitoring Platform</p>
           </div>
         </div>

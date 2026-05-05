@@ -1,15 +1,18 @@
 .users-page {
-  padding: 2rem;
   background: var(--bg-primary);
   min-height: 100vh;
   animation: fadeIn 0.5s ease-out;
+}
+
+.users-page .page-content {
+  padding: 1.5rem;
 }
 
 .users-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .header-title h1 {

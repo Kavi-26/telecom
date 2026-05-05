@@ -140,11 +140,20 @@ export default function COREPage() {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="custom-chart-tooltip">
-          <p className="label">{label}</p>
+        <div className="custom-chart-tooltip" style={{ 
+          background: 'rgba(15, 23, 42, 0.95)', 
+          border: '1px solid var(--brand-primary)',
+          padding: '12px',
+          borderRadius: '10px',
+          boxShadow: 'var(--shadow-lg)',
+          backdropFilter: 'blur(10px)',
+          color: '#fff'
+        }}>
+          <p className="label" style={{ fontWeight: 800, marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '4px' }}>{label}</p>
           {payload.map((p, i) => (
-            <p key={i} style={{ color: p.color }}>
-              {p.name}: {p.value.toFixed(2)} {p.unit || ''}
+            <p key={i} style={{ color: p.color, fontSize: '13px', fontWeight: 600, display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
+              <span>{p.name}:</span>
+              <span>{p.value.toFixed(2)} {p.unit || ''}</span>
             </p>
           ))}
         </div>
@@ -197,9 +206,31 @@ export default function COREPage() {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={perfData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" vertical={false} />
-                  <XAxis dataKey="time" stroke="var(--text-muted)" fontSize={10} tickFormatter={(val) => val.split(' ')[0]} interval={6} />
-                  <YAxis yAxisId="left" stroke="var(--brand-primary)" fontSize={10} unit="ms" domain={[0, 15]} />
-                  <YAxis yAxisId="right" orientation="right" stroke="var(--brand-accent)" fontSize={10} unit="%" domain={[90, 100]} />
+                  <XAxis 
+                    dataKey="time" 
+                    stroke="var(--text-secondary)" 
+                    fontSize={12} 
+                    tickFormatter={(val) => val.split(' ')[0]} 
+                    interval={6} 
+                    tick={{ fontWeight: 600 }}
+                  />
+                  <YAxis 
+                    yAxisId="left" 
+                    stroke="var(--brand-primary)" 
+                    fontSize={12} 
+                    unit="ms" 
+                    domain={[0, 15]} 
+                    tick={{ fontWeight: 600 }}
+                  />
+                  <YAxis 
+                    yAxisId="right" 
+                    orientation="right" 
+                    stroke="var(--brand-accent)" 
+                    fontSize={12} 
+                    unit="%" 
+                    domain={[90, 100]} 
+                    tick={{ fontWeight: 600 }}
+                  />
                   <Tooltip content={<CustomTooltip />} />
                   <Legend verticalAlign="top" height={36} />
                   <Line yAxisId="left" type="monotone" dataKey="latency" name="Latency" unit="ms" stroke="var(--brand-primary)" strokeWidth={2} dot={false} />
@@ -225,8 +256,20 @@ export default function COREPage() {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" vertical={false} />
-                  <XAxis dataKey="time" stroke="var(--text-muted)" fontSize={10} tickFormatter={(val) => val.split(' ')[0]} interval={6} />
-                  <YAxis stroke="var(--text-muted)" fontSize={10} unit="G" />
+                  <XAxis 
+                    dataKey="time" 
+                    stroke="var(--text-secondary)" 
+                    fontSize={12} 
+                    tickFormatter={(val) => val.split(' ')[0]} 
+                    interval={6} 
+                    tick={{ fontWeight: 600 }}
+                  />
+                  <YAxis 
+                    stroke="var(--text-secondary)" 
+                    fontSize={12} 
+                    unit="G" 
+                    tick={{ fontWeight: 600 }}
+                  />
                   <Tooltip content={<CustomTooltip />} />
                   <Area type="monotone" dataKey="throughput" name="Throughput" unit="Gbps" stroke="var(--brand-secondary)" fillOpacity={1} fill="url(#colorThroughput)" strokeWidth={2} />
                 </AreaChart>

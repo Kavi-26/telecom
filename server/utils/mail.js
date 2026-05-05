@@ -15,20 +15,20 @@ const sendResetEmail = async (email, token) => {
   const resetUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/reset-password?token=${token}`;
 
   const mailOptions = {
-    from: `"Interactive Support" <${process.env.MAIL_FROM || 'support@interactive.com'}>`,
+    from: `"TelcoVision Support" <${process.env.MAIL_FROM || 'support@TelcoVision.com'}>`,
     to: email,
-    subject: 'Password Reset Request - Interactive',
+    subject: 'Password Reset Request - TelcoVision',
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e1e1e1; border-radius: 10px;">
         <h2 style="color: #00d2ff;">Password Reset</h2>
-        <p>You requested a password reset for your Interactive account.</p>
+        <p>You requested a password reset for your TelcoVision account.</p>
         <p>Please click the button below to reset your password. This link will expire in 1 hour.</p>
         <div style="text-align: center; margin: 30px 0;">
           <a href="${resetUrl}" style="background-color: #00d2ff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
         </div>
         <p>If you didn't request this, you can safely ignore this email.</p>
         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-        <p style="font-size: 12px; color: #666;">© 2026 Interactive · Network Element Monitoring Platform</p>
+        <p style="font-size: 12px; color: #666;">© 2026 TelcoVision · Network Element Monitoring Platform</p>
       </div>
     `,
   };

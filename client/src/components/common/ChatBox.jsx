@@ -49,7 +49,7 @@ const getAIResponse = (message, domain) => {
 
   // Help
   if (msg.includes('help') || msg.includes('what can you') || msg === '?') {
-    return `🤖 **I'm your Interactive AI Assistant!** I can help you with:\n\n` +
+    return `🤖 **I'm your TelcoVision AI Assistant!** I can help you with:\n\n` +
       `📡 **RAN**: BTS status, RSRP/RSRQ/SINR KPIs, capacity\n` +
       `🖥️ **CORE**: HLR/EPC/Gateway status, latency, throughput\n` +
       `🌐 **Transport**: Link status, bandwidth utilization\n` +
@@ -61,7 +61,7 @@ const getAIResponse = (message, domain) => {
   // Greeting
   if (msg.match(/^(hi|hello|hey|good morning|good afternoon|howdy)/)) {
     const greetings = [
-      '👋 Hello! I\'m your Interactive AI. Network is being monitored in real-time. How can I assist you today?',
+      '👋 Hello! I\'m your TelcoVision AI. Network is being monitored in real-time. How can I assist you today?',
       '👋 Hi there! Currently tracking 10 BTS stations, 11 core elements, and 8 transport links. What would you like to know?',
     ];
     return greetings[Math.floor(Math.random() * greetings.length)];
@@ -88,7 +88,7 @@ export default function ChatBox({ domain = 'general' }) {
     {
       id: 1,
       role: 'assistant',
-      text: '👋 Hi! I\'m your Interactive AI. I can help you analyze network status, KPIs, and more. Type "help" to see what I can do!',
+      text: '👋 Hi! I\'m your TelcoVision AI. I can help you analyze network status, KPIs, and more. Type "help" to see what I can do!',
       time: new Date(),
     },
   ]);

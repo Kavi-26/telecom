@@ -95,52 +95,54 @@ export default function Users() {
         onRefresh={fetchUsers}
       />
 
-      <header className="users-header">
-        <div className="header-actions" style={{ width: '100%', justifyContent: 'space-between' }}>
-          <div className="search-bar">
-            <Search size={18} />
-            <input 
-              type="text" 
-              placeholder="Search users..." 
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+      <div className="page-content">
+        <header className="users-header">
+          <div className="header-actions" style={{ width: '100%', justifyContent: 'space-between' }}>
+            <div className="search-bar">
+              <Search size={18} />
+              <input 
+                type="text" 
+                placeholder="Search users..." 
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <button className="btn btn-secondary btn-sm" onClick={() => handleExport('excel')}>Excel</button>
+              <button className="btn btn-secondary btn-sm" onClick={() => handleExport('pdf')}>PDF</button>
+              <button className="add-btn" onClick={() => handleOpenModal()}>
+                <UserPlus size={18} /> Add New User
+              </button>
+            </div>
           </div>
-          <div style={{ display: 'flex', gap: '0.75rem' }}>
-            <button className="btn btn-secondary btn-sm" onClick={() => handleExport('excel')}>Excel</button>
-            <button className="btn btn-secondary btn-sm" onClick={() => handleExport('pdf')}>PDF</button>
-            <button className="add-btn" onClick={() => handleOpenModal()}>
-              <UserPlus size={18} /> Add New User
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <div className="users-grid">
-        {filteredUsers.map(u => (
-          <div key={u.id} className="user-card">
-            <div className="user-card-header">
-              <div className="user-avatar">
-                {u.username.charAt(0).toUpperCase()}
+        </header>
+  
+        <div className="users-grid">
+          {filteredUsers.map(u => (
+            <div key={u.id} className="user-card">
+              <div className="user-card-header">
+                <div className="user-avatar">
+                  {u.username.charAt(0).toUpperCase()}
+                </div>
+                <div className={`user-badge ${u.role}`}>{u.role.replace('_', ' ')}</div>
               </div>
-              <div className={`user-badge ${u.role}`}>{u.role.replace('_', ' ')}</div>
+              <div className="user-card-body">
+                <h3>{u.username}</h3>
+                <p><Mail size={14} /> {u.email}</p>
+                <p><Shield size={14} /> {u.role === 'admin' ? 'Full System Access' : 'Dashboard Access Only'}</p>
+              </div>
+              <div className="user-card-footer">
+                <button className="icon-btn edit" onClick={() => handleOpenModal(u)} title="Edit User"><Edit2 size={16} /></button>
+                <button className="icon-btn delete" onClick={() => handleDelete(u.id)} title="Delete User"><Trash2 size={16} /></button>
+              </div>
             </div>
-            <div className="user-card-body">
-              <h3>{u.username}</h3>
-              <p><Mail size={14} /> {u.email}</p>
-              <p><Shield size={14} /> {u.role === 'admin' ? 'Full System Access' : 'Dashboard Access Only'}</p>
+          ))}
+          {filteredUsers.length === 0 && (
+            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
+              No users found matching your search.
             </div>
-            <div className="user-card-footer">
-              <button className="icon-btn edit" onClick={() => handleOpenModal(u)} title="Edit User"><Edit2 size={16} /></button>
-              <button className="icon-btn delete" onClick={() => handleDelete(u.id)} title="Delete User"><Trash2 size={16} /></button>
-            </div>
-          </div>
-        ))}
-        {filteredUsers.length === 0 && (
-          <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
-            No users found matching your search.
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {isModalOpen && (
