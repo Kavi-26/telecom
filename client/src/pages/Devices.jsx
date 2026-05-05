@@ -19,6 +19,8 @@ export default function Devices() {
   const [devices, setDevices] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [selectedDevice, setSelectedDevice] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchDevices = async () => {
     setLoading(true);
@@ -30,6 +32,10 @@ export default function Devices() {
     } finally {
       setLoading(false);
     }
+  };
+  const handleOpenDetails = (device) => {
+    setSelectedDevice(device);
+    setIsModalOpen(true);
   };
 
   const handleExport = (type) => {
@@ -174,7 +180,11 @@ export default function Devices() {
                 <td className="ip-cell">{device.ip}</td>
                 <td>{device.firmware}</td>
                 <td>
-                  <button className="more-btn" title="Manage (Read Only)">
+                  <button 
+                    className="more-btn" 
+                    title="Manage (Read Only)"
+                    onClick={() => handleOpenDetails(device)}
+                  >
                     <MoreVertical size={16} />
                   </button>
                 </td>
@@ -188,6 +198,67 @@ export default function Devices() {
           </div>
         )}
       </div>
+      {/* Device Details Modal */}
+      {isModalOpen && selectedDevice && (
+        <div className="d-modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <div className="d-modal-content" onClick={e => e.stopPropagation()}>
+            <div className="d-modal-header">
+              <div className="d-modal-title">
+                <div className={`status-dot ${selectedDevice.status}`}></div>
+                <h2>Device Configuration Profile</h2>
+              </div>
+              <button className="d-close-btn" onClick={() => setIsModalOpen(false)}>×</button>
+            </div>
+            <div className="d-modal-body">
+              <div className="d-detail-grid">
+                <div className="d-detail-item">
+                  <label>Hardware ID</label>
+                  <span>{selectedDevice.id}</span>
+                </div>
+                <div className="d-detail-item">
+                  <label>Service Tag</label>
+                  <span>{selectedDevice.name}</span>
+                </div>
+                <div className="d-detail-item">
+                  <label>Physical Location</label>
+                  <span>{selectedDevice.location}</span>
+                </div>
+                <div className="d-detail-item">
+                  <label>IP Address</label>
+                  <span>{selectedDevice.ip}</span>
+                </div>
+                <div className="d-detail-item">
+                  <label>Current Status</label>
+                  <span className={`d-status-badge ${selectedDevice.status}`}>
+                    {selectedDevice.status.toUpperCase()}
+                  </span>
+                </div>
+                <div className="d-detail-item">
+                  <label>Firmware Version</label>
+                  <span>{selectedDevice.firmware}</span>
+                </div>
+              </div>
+              <div className="d-performance-section">
+                <h3>Real-time Utilization</h3>
+                <div className="d-stats-row">
+                  <div className="d-stat-box">
+                    <span className="d-stat-label">Active Clients</span>
+                    <span className="d-stat-val">{selectedDevice.clients}</span>
+                  </div>
+                  <div className="d-stat-box">
+                    <span className="d-stat-label">Uptime</span>
+                    <span className="d-stat-val">12d 4h 22m</span>
+                  </div>
+                  <div className="d-stat-box">
+                    <span className="d-stat-label">Signal Quality</span>
+                    <span className="d-stat-val">98%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

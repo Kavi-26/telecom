@@ -75,6 +75,7 @@ export default function Reports() {
     to: new Date().toISOString().split('T')[0]
   });
   const [selectedDetails, setSelectedDetails] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -119,9 +120,19 @@ export default function Reports() {
       const date = new Date(d.timestamp);
       const from = new Date(dateRange.from);
       const to = new Date(dateRange.to);
-      return date >= from && date <= to;
+      const inRange = date >= from && date <= to;
+
+      if (!inRange) return false;
+      if (!searchTerm) return true;
+
+      const formattedDate = date.toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }).toLowerCase();
+      const searchStr = searchTerm.toLowerCase();
+
+      return formattedDate.includes(searchStr) || 
+             ((d.traffic / 100).toFixed(2) + ' tbps').includes(searchStr) ||
+             (d.latency.toFixed(1) + ' ms').includes(searchStr);
     });
-  }, [reportData, dateRange]);
+  }, [reportData, dateRange, searchTerm]);
 
   const stats = useMemo(() => {
     if (filteredData.length === 0) return [
@@ -299,7 +310,12 @@ export default function Reports() {
             <h3>Detailed Performance Logs</h3>
             <div className="search-box-modern">
               <Search size={16} />
-              <input type="text" placeholder="Search logs..." />
+              <input 
+                type="text" 
+                placeholder="Search logs..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
           </div>
           <div className="table-container">
