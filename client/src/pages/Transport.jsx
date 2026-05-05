@@ -15,7 +15,8 @@ import {
   Download,
   Link as LinkIcon,
   Wifi,
-  CloudLightning
+  CloudLightning,
+  CheckCircle2
 } from 'lucide-react';
 import { 
   MapContainer, 
@@ -140,6 +141,24 @@ export default function TransportPage() {
     { label: 'Link Faults', value: links.filter(l => l.status === 'down').length, icon: <CloudLightning size={20} />, trend: 'Critical', trendUp: false, color: 'var(--status-down)' },
   ], [links]);
 
+  const [notification, setNotification] = useState(null);
+
+  const showToast = (msg) => {
+    setNotification(msg);
+    setTimeout(() => setNotification(null), 4000);
+  };
+
+  const handleRerouteTraffic = () => {
+    setLoading(true);
+    // Simulate SDN traffic re-routing and link recovery
+    setTimeout(() => {
+      setLinks(prev => prev.map(l => ({ ...l, status: 'up', utilization: Math.min(l.utilization, 65) })));
+      setAlarms(prev => prev.filter(a => a.severity !== 'critical'));
+      setLoading(false);
+      showToast('Traffic Engineering Successful: Links restored and load balanced');
+    }, 1800);
+  };
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
@@ -209,7 +228,13 @@ export default function TransportPage() {
                 }
               </div>
             </div>
-            <button className="btn btn-primary btn-sm" style={{ background: 'var(--status-down)', border: 'none', color: '#fff' }}>Re-route Traffic</button>
+            <button 
+              className="btn btn-primary btn-sm" 
+              style={{ background: 'var(--status-down)', border: 'none', color: '#fff' }}
+              onClick={handleRerouteTraffic}
+            >
+              Re-route Traffic
+            </button>
           </div>
         )}
 
@@ -484,6 +509,12 @@ export default function TransportPage() {
           </div>
         </div>
       </div>
+      {notification && (
+        <div className="notification-toast success">
+          <CheckCircle2 size={18} />
+          {notification}
+        </div>
+      )}
     </div>
   );
 }

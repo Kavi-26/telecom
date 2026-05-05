@@ -107,9 +107,9 @@ export default function Users() {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <button className="btn btn-secondary btn-sm" onClick={() => handleExport('excel')}>Excel</button>
-              <button className="btn btn-secondary btn-sm" onClick={() => handleExport('pdf')}>PDF</button>
+            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+              <button className="btn btn-secondary" style={{ padding: '0.6rem 1.2rem', borderRadius: '14px', fontWeight: 600 }} onClick={() => handleExport('excel')}>Excel</button>
+              <button className="btn btn-secondary" style={{ padding: '0.6rem 1.2rem', borderRadius: '14px', fontWeight: 600 }} onClick={() => handleExport('pdf')}>PDF</button>
               <button className="add-btn" onClick={() => handleOpenModal()}>
                 <UserPlus size={18} /> Add New User
               </button>

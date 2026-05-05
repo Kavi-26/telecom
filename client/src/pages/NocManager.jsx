@@ -81,11 +81,21 @@ export default function NocManager() {
 
   const stats = useMemo(() => {
     return {
-      critical: alarms.filter(a => a.priority === 'critical' && a.status === 'active').length,
-      major: alarms.filter(a => a.priority === 'major' && a.status === 'active').length,
-      minor: alarms.filter(a => a.priority === 'minor' && a.status === 'active').length
+      critical: alarms.filter(a => a.priority === 'critical').length,
+      major: alarms.filter(a => a.priority === 'major').length,
+      minor: alarms.filter(a => a.priority === 'minor').length
     };
   }, [alarms]);
+
+  const calculateDuration = (timestamp) => {
+    if (!timestamp) return '24m 12s';
+    const start = new Date(timestamp);
+    const now = new Date();
+    const diff = Math.floor((now - start) / 1000);
+    const mins = Math.floor(diff / 60);
+    const secs = diff % 60;
+    return `${mins}m ${secs}s`;
+  };
 
   if (loading && alarms.length === 0) return (
     <div className="loading-center">
@@ -191,7 +201,7 @@ export default function NocManager() {
                       <td><span className="domain-chip">{alarm.domain}</span></td>
                       <td><strong>{alarm.element_name}</strong></td>
                       <td className="desc-cell">{alarm.description}</td>
-                      <td>24m 12s</td>
+                       <td>{calculateDuration(alarm.created_at || alarm.timestamp)}</td>
                       <td>
                         <div className="action-group">
                           <button 
