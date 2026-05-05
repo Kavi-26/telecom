@@ -200,23 +200,38 @@
 .logout-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 9px 10px;
-  border: none;
+  gap: 12px;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: none;
+  background: transparent;
   color: var(--sidebar-text-muted);
   font-size: 13px;
+  font-weight: 600;
   font-family: 'Inter', sans-serif;
   cursor: pointer;
   transition: var(--transition);
-  width: 100%;
+  width: calc(100% - 16px);
+  margin: 8px auto;
   text-align: left;
   white-space: nowrap;
+  box-shadow: var(--shadow-sm);
 }
+
 .logout-btn:hover {
-  background: rgba(239,68,68,0.1);
-  color: var(--alarm-critical);
+  background: rgba(255, 62, 62, 0.08);
+  color: var(--status-down);
+  border-color: rgba(255, 62, 62, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 62, 62, 0.15);
+}
+
+.logout-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.logout-btn:hover svg {
+  transform: translateX(3px);
 }
 
 /* Theme Toggle Switch */
