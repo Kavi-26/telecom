@@ -5,12 +5,12 @@
 
 export const generateTransportNodes = () => {
   return [
-    { id: 'node-jkt-01', name: 'Core-Router-JKT', lat: -6.2088, lng: 106.8456, type: 'backbone' },
-    { id: 'node-bdg-01', name: 'Core-Router-BDG', lat: -6.9175, lng: 107.6191, type: 'backbone' },
-    { id: 'node-sby-01', name: 'Core-Router-SBY', lat: -7.2575, lng: 112.7521, type: 'backbone' },
-    { id: 'node-mdn-01', name: 'Metro-Router-MDN', lat: 3.5952, lng: 98.6722, type: 'metro' },
-    { id: 'node-mks-01', name: 'Metro-Router-MKS', lat: -5.1477, lng: 119.4327, type: 'metro' },
-    { id: 'node-plb-01', name: 'Access-Router-PLB', lat: -2.9761, lng: 104.7458, type: 'access' },
+    { id: 'node-bom-main', name: 'Core-Router-MUMBAI-CENTRAL', lat: 19.0760, lng: 72.8777, type: 'backbone' },
+    { id: 'node-bom-andheri', name: 'Core-Router-ANDHERI', lat: 19.1136, lng: 72.8697, type: 'backbone' },
+    { id: 'node-bom-bandra', name: 'Core-Router-BANDRA', lat: 19.0596, lng: 72.8295, type: 'backbone' },
+    { id: 'node-bom-kurla', name: 'Metro-Router-KURLA', lat: 19.0727, lng: 72.8826, type: 'metro' },
+    { id: 'node-bom-chembur', name: 'Metro-Router-CHEMBUR', lat: 19.0622, lng: 72.9024, type: 'metro' },
+    { id: 'node-bom-worli', name: 'Access-Router-WORLI', lat: 19.0176, lng: 72.8172, type: 'access' },
   ];
 };
 
@@ -53,8 +53,8 @@ export const generateTransportPerformance = (days = 10) => {
 
 export const generateTransportAlarms = () => {
   return [
-    { id: 1, link: 'Core-BDG → Access-PLB', severity: 'critical', type: 'Link Failure', time: '2 mins ago', message: 'Fiber cut detected on segment BDG-PLB-04' },
-    { id: 2, link: 'Core-BDG → Core-SBY', severity: 'major', type: 'High Utilization', time: '12 mins ago', message: 'Link utilization exceeded 85% threshold (currently 88%)' },
-    { id: 3, link: 'Core-JKT → Core-SBY', severity: 'minor', type: 'Latency Spike', time: '45 mins ago', message: 'Jitter increased beyond 15ms limit' },
+    { id: 1, link: 'BOM-Central → Worli-Access', severity: 'critical', type: 'Link Failure', time: '2 mins ago', message: 'Fiber cut detected on segment BOM-WOR-04' },
+    { id: 2, link: 'Andheri-Core → BOM-Central', severity: 'major', type: 'High Utilization', time: '12 mins ago', message: 'Link utilization exceeded 85% threshold (currently 88%)' },
+    { id: 3, link: 'Bandra-Core → BOM-Central', severity: 'minor', type: 'Latency Spike', time: '45 mins ago', message: 'Jitter increased beyond 15ms limit' },
   ];
 };

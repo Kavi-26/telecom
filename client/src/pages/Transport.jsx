@@ -351,8 +351,8 @@ export default function TransportPage() {
             <div style={{ flex: 1, zIndex: 1, minHeight: '400px' }}>
               <MapContainer 
                 key={theme}
-                center={[-2.5489, 118.0149]} 
-                zoom={5} 
+                center={[19.0760, 72.8777]} 
+                zoom={12} 
                 style={{ height: '100%', width: '100%' }}
                 scrollWheelZoom={false}
                 attributionControl={false}

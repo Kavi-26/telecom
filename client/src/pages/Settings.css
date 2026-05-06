@@ -32,7 +32,7 @@
   box-shadow: var(--shadow-lg);
 }
 
-.nav-item {
+.settings-nav .nav-item {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -49,13 +49,13 @@
   width: 100%;
 }
 
-.nav-item:hover {
+.settings-nav .nav-item:hover {
   background: var(--bg-secondary);
   color: var(--text-primary);
   transform: translateX(4px);
 }
 
-.nav-item.active {
+.settings-nav .nav-item.active {
   background: var(--brand-primary);
   color: #000;
   border-color: rgba(255, 255, 255, 0.1);
