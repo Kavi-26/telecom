@@ -160,6 +160,33 @@ export default function Reports() {
     ];
   }, [filteredData, selectedDomain]);
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-chart-tooltip" style={{ 
+          background: 'rgba(15, 23, 42, 0.95)', 
+          border: '1px solid var(--brand-primary)',
+          padding: '12px',
+          borderRadius: '10px',
+          boxShadow: 'var(--shadow-lg)',
+          backdropFilter: 'blur(10px)',
+          color: '#fff'
+        }}>
+          <p className="label" style={{ fontWeight: 800, marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '4px' }}>
+            {new Date(label).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+          </p>
+          {payload.map((p, i) => (
+            <p key={i} style={{ color: p.color || p.fill, fontSize: '13px', fontWeight: 600, display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
+              <span>{p.name}:</span>
+              <span>{p.value.toFixed(2)} {p.name.includes('Latency') ? 'ms' : p.name.includes('Traffic') ? 'Tbps' : '%'}</span>
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
   if (loading) return <Loading message="Generating Historical Analysis..." />;
 
   return (
@@ -256,9 +283,7 @@ export default function Reports() {
                     tick={{fill: 'var(--text-muted)', fontSize: 10}}
                     domain={[70, 100]}
                   />
-                  <Tooltip 
-                    contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px' }}
-                  />
+                  <Tooltip content={<CustomTooltip />} />
                   <Legend />
                   {(selectedDomain === 'all' || selectedDomain === 'ran') && (
                     <Area type="monotone" name="RAN Health" dataKey="ran_health" stroke="#7c3aed" strokeWidth={2} fill="url(#ranGrad)" />
@@ -294,7 +319,7 @@ export default function Reports() {
                   />
                   <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{fill: '#a78bfa', fontSize: 10}} />
                   <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{fill: '#f59e0b', fontSize: 10}} />
-                  <Tooltip />
+                  <Tooltip content={<CustomTooltip />} />
                   <Legend />
                   <Bar yAxisId="left" name="Traffic Load (Tbps)" dataKey="traffic" fill="#7c3aed" radius={[4, 4, 0, 0]} barSize={20} opacity={0.6} />
                   <Line yAxisId="right" name="Latency (ms)" type="monotone" dataKey="latency" stroke="#f59e0b" strokeWidth={3} dot={false} />
@@ -380,7 +405,7 @@ export default function Reports() {
                 <h2>Analysis: {new Date(selectedDetails.timestamp).toLocaleDateString(undefined, { dateStyle: 'full' })}</h2>
                 <p>Granular performance breakdown for selected observation period</p>
               </div>
-              <button className="close-btn-circle" onClick={() => setSelectedDetails(null)}><X size={20} /></button>
+              <button className="close-btn" onClick={() => setSelectedDetails(null)}><X size={20} /></button>
             </div>
 
             <div className="modal-body-reports">

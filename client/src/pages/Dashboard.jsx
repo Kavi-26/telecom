@@ -5,9 +5,9 @@ import {
   ChevronRight, ArrowUpRight, ArrowDownRight,
   Wifi, ShieldCheck, Database, TrendingUp
 } from 'lucide-react';
-import { 
-  LineChart, Line, XAxis, YAxis, CartesianGrid, 
-  Tooltip, ResponsiveContainer, AreaChart, Area 
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid,
+  Tooltip, ResponsiveContainer, AreaChart, Area
 } from 'recharts';
 import api from '../api/axios';
 import Navbar from '../components/common/Navbar';
@@ -105,7 +105,7 @@ export default function Dashboard() {
         {/* Health Section */}
         <div className="card health-card">
           <div className="card-header">
-            <h3 className="card-title">System Domain Health</h3>
+            <h3 className="card-title">Network Domain Health</h3>
           </div>
           <div className="health-content">
             <HealthGauge value={health?.overall || 98} />
@@ -133,44 +133,44 @@ export default function Dashboard() {
               <AreaChart data={trendData}>
                 <defs>
                   <linearGradient id="colorHealth" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--brand-primary)" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="var(--brand-primary)" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="var(--brand-primary)" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="var(--brand-primary)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
-                <XAxis 
-                  dataKey="time" 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{fill: 'var(--text-muted)', fontSize: 10}} 
+                <XAxis
+                  dataKey="time"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: 'var(--text-muted)', fontSize: 10 }}
                 />
-                <YAxis 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{fill: 'var(--text-muted)', fontSize: 10}}
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: 'var(--text-muted)', fontSize: 10 }}
                   width={25}
                 />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'var(--bg-card)', 
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'var(--bg-card)',
                     borderColor: 'var(--border)',
                     borderRadius: '12px',
                     boxShadow: 'var(--shadow-lg)'
                   }}
                 />
-                <Area 
-                  type="monotone" 
-                  dataKey="health" 
-                  stroke="var(--brand-primary)" 
+                <Area
+                  type="monotone"
+                  dataKey="health"
+                  stroke="var(--brand-primary)"
                   strokeWidth={3}
-                  fillOpacity={1} 
-                  fill="url(#colorHealth)" 
+                  fillOpacity={1}
+                  fill="url(#colorHealth)"
                 />
-                <Line 
-                  type="monotone" 
-                  dataKey="traffic" 
-                  stroke="#f59e0b" 
-                  strokeWidth={2} 
+                <Line
+                  type="monotone"
+                  dataKey="traffic"
+                  stroke="#f59e0b"
+                  strokeWidth={2}
                   dot={false}
                 />
               </AreaChart>
@@ -184,7 +184,7 @@ export default function Dashboard() {
         <div className="card activity-card">
           <div className="card-header">
             <h3 className="card-title">Critical Recent Activity</h3>
-           
+
           </div>
           <div className="activity-list">
             {recentAlarms.length > 0 ? recentAlarms.map((alarm, idx) => (
@@ -247,7 +247,7 @@ export default function Dashboard() {
                 <div className="summary-val">{health?.overall || 76}%</div>
                 <div className="summary-text">Overall Infrastructure Stability Index</div>
               </div>
-              
+
               <div className="domain-breakdown">
                 <div className="domain-item">
                   <div className="domain-info">

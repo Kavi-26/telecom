@@ -255,9 +255,6 @@ export default function NocDashboard() {
                   {filteredData.length > 0 ? filteredData.map((item, idx) => (
                     <tr key={idx} className="noc-row">
                       <td className="name-cell">
-                        <div className="element-avatar">
-                          {activeTab === 'ran' ? <Radio size={14} /> : activeTab === 'core' ? <Server size={14} /> : <Network size={14} />}
-                        </div>
                         <div>
                           <div className="primary-text">{item.name || item.element_name || item.link_name}</div>
                           <div className="secondary-text">ID: {item.id || item.element_id || 'N/A'}</div>

@@ -485,8 +485,8 @@ export default function COREPage() {
                       <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" vertical={false} />
                       <XAxis dataKey="time" hide />
                       <YAxis hide />
-                      <Tooltip />
-                      <Area type="monotone" dataKey="throughput" stroke="var(--domain-core)" fill="var(--domain-core)" fillOpacity={0.1} />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Area type="monotone" dataKey="throughput" name="Throughput" unit="Gbps" stroke="var(--domain-core)" fill="var(--domain-core)" fillOpacity={0.1} />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>

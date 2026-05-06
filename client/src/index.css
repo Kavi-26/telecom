@@ -103,6 +103,16 @@
   --scrollbar-track: #e8eef5;
   --scrollbar-thumb: #cbd5e1;
 
+  /* Deep Tones for Light Theme Accessibility */
+  --status-up: #059669;
+  --status-down: #dc2626;
+  --status-degraded: #d97706;
+  --status-idle: #64748b;
+  
+  --domain-ran: #7c3aed;
+  --domain-core: #0891b2;
+  --domain-ip: #059669;
+
   /* Shadows - Soft & Subtle */
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
   --shadow: 0 4px 12px rgba(0,0,0,0.08);
@@ -552,6 +562,20 @@ tbody tr:hover { background: var(--bg-card-hover); }
   border-radius: 4px;
   transition: width 0.5s ease;
 }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+.btn.loading {
+  opacity: 0.7;
+  cursor: wait;
+}
 .progress-fill.low    { background: var(--status-up); }
 .progress-fill.medium { background: var(--alarm-major); }
 .progress-fill.high   { background: var(--status-down); }
@@ -734,5 +758,75 @@ tbody tr:hover { background: var(--bg-card-hover); }
   .main-content { margin-left: 0; }
   .grid-2, .grid-3, .grid-4, .grid-6 { grid-template-columns: 1fr; }
   .page-content { padding: 16px; }
+}
+
+/* ============================================================
+   LEAFLET MAP CONTROLS DARK THEME
+   ============================================================ */
+[data-theme="dark"] .leaflet-bar {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+[data-theme="dark"] .leaflet-bar a {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+[data-theme="dark"] .leaflet-bar a:hover {
+  background-color: var(--bg-card-hover) !important;
+  color: var(--brand-primary) !important;
+}
+
+[data-theme="dark"] .leaflet-control-layers {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-primary) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+[data-theme="dark"] .leaflet-control-layers-expanded {
+  padding: 8px 12px !important;
+  background-color: var(--bg-card) !important;
+}
+
+[data-theme="dark"] .leaflet-control-layers-toggle {
+  background-color: var(--bg-card) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+[data-theme="dark"] .leaflet-popup-content-wrapper,
+[data-theme="dark"] .leaflet-popup-tip {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+/* ============================================================
+   MODAL CONTROLS
+   ============================================================ */
+.modal-close, .close-btn {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border) !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--text-secondary) !important;
+  cursor: pointer !important;
+  transition: var(--transition) !important;
+  padding: 0 !important;
+}
+
+.modal-close:hover, .close-btn:hover {
+  background: var(--bg-card-hover) !important;
+  color: var(--status-down) !important;
+  border-color: var(--status-down) !important;
+  transform: rotate(90deg) !important;
 }
 

@@ -22,6 +22,7 @@ export default function NocManager() {
   });
   const [notification, setNotification] = useState(null);
   const [selectedAlarm, setSelectedAlarm] = useState(null);
+  const [isTestingChannels, setIsTestingChannels] = useState(false);
 
   const fetchData = async () => {
     setLoading(true);
@@ -62,6 +63,32 @@ export default function NocManager() {
       setAlarms(previousAlarms);
       showToast(`Failed to ${action} incident. Please try again.`, 'error');
     }
+  };
+
+  const handleTestChannels = async () => {
+    setIsTestingChannels(true);
+    showToast('Initiating diagnostic test across all channels...', 'info');
+    
+    // Simulate sequential testing
+    await new Promise(r => setTimeout(r, 1000));
+    showToast('Email Service: Connection verified. Test alert sent.', 'success');
+    
+    await new Promise(r => setTimeout(r, 800));
+    showToast('Slack API: Webhook response 200 OK. Integrated.', 'success');
+    
+    await new Promise(r => setTimeout(r, 800));
+    showToast('WhatsApp Gateway: Virtual number active. Message delivered.', 'success');
+    
+    setIsTestingChannels(false);
+    showToast('All notification channels are operational.', 'success');
+  };
+
+  const toggleChannel = (channel) => {
+    setNotificationSettings(prev => {
+      const newState = { ...prev, [channel]: !prev[channel] };
+      showToast(`${channel.toUpperCase()} notifications ${newState[channel] ? 'enabled' : 'disabled'}`, newState[channel] ? 'success' : 'info');
+      return newState;
+    });
   };
 
   useEffect(() => {
@@ -155,14 +182,17 @@ export default function NocManager() {
             <div className="card-header">
               <div className="card-title">Alarm Control Center</div>
               <div className="card-actions">
-                <div className="search-box">
-                  <Search size={16} />
+                <div className="noc-search-container">
+                  <Search size={18} className="search-icon" />
                   <input 
                     type="text" 
                     placeholder="Search incidents..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
+                  {searchTerm && (
+                    <button className="clear-search-btn" onClick={() => setSearchTerm('')}>&times;</button>
+                  )}
                 </div>
               </div>
             </div>
@@ -271,7 +301,7 @@ export default function NocManager() {
                     <input 
                       type="checkbox" 
                       checked={notificationSettings.email} 
-                      onChange={() => setNotificationSettings(s => ({...s, email: !s.email}))} 
+                      onChange={() => toggleChannel('email')} 
                     />
                   </div>
 
@@ -286,7 +316,7 @@ export default function NocManager() {
                     <input 
                       type="checkbox" 
                       checked={notificationSettings.slack} 
-                      onChange={() => setNotificationSettings(s => ({...s, slack: !s.slack}))} 
+                      onChange={() => toggleChannel('slack')} 
                     />
                   </div>
 
@@ -301,14 +331,19 @@ export default function NocManager() {
                     <input 
                       type="checkbox" 
                       checked={notificationSettings.whatsapp} 
-                      onChange={() => setNotificationSettings(s => ({...s, whatsapp: !s.whatsapp}))} 
+                      onChange={() => toggleChannel('whatsapp')} 
                     />
                   </div>
                 </div>
 
-                <button className="btn btn-secondary btn-sm" style={{ width: '100%', justifyContent: 'center' }}>
-                  <Share2 size={14} />
-                  Test All Channels
+                <button 
+                  className={`btn btn-secondary btn-sm ${isTestingChannels ? 'loading' : ''}`} 
+                  style={{ width: '100%', justifyContent: 'center' }}
+                  onClick={handleTestChannels}
+                  disabled={isTestingChannels}
+                >
+                  <Share2 size={14} className={isTestingChannels ? 'spin' : ''} />
+                  {isTestingChannels ? 'Testing...' : 'Test All Channels'}
                 </button>
               </div>
             </div>

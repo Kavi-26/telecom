@@ -358,19 +358,13 @@ export default function TransportPage() {
                 attributionControl={false}
               >
                 <LayersControl position="topright">
-                  <LayersControl.BaseLayer checked={theme !== 'light'} name="Dark Mode">
-                    <TileLayer
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                      url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-                    />
-                  </LayersControl.BaseLayer>
-                  <LayersControl.BaseLayer checked={theme === 'light'} name="Light Mode">
+                  <LayersControl.BaseLayer checked={theme === 'light'} name="Street View">
                     <TileLayer
                       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
                       url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
                     />
                   </LayersControl.BaseLayer>
-                  <LayersControl.BaseLayer name="Satellite">
+                  <LayersControl.BaseLayer checked={theme === 'dark'} name="Satellite">
                     <TileLayer
                       attribution='&copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
                       url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"

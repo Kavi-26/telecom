@@ -23,10 +23,24 @@ export default function Navbar({ title, subtitle, onRefresh }) {
         </div>
       </div>
 
+      <div className="navbar-center">
+        <form className="navbar-search-wrapper" onSubmit={handleSearch}>
+          <Search size={18} className="search-icon" />
+          <input
+            type="text"
+            placeholder="Search links..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </form>
+      </div>
 
       <div className="navbar-right">
-
-
+        {onRefresh && (
+          <button className="btn btn-ghost btn-icon refresh-nav" onClick={onRefresh} title="Sync Data">
+            <RefreshCw size={18} />
+          </button>
+        )}
         <button
           className="btn btn-ghost btn-icon theme-toggle"
           onClick={toggleTheme}
