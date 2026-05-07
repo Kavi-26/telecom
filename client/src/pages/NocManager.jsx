@@ -23,6 +23,8 @@ export default function NocManager() {
   const [notification, setNotification] = useState(null);
   const [selectedAlarm, setSelectedAlarm] = useState(null);
   const [isTestingChannels, setIsTestingChannels] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [activeSelect, setActiveSelect] = useState(null); // 'domain' | 'priority' | null
 
   const fetchData = async () => {
     setLoading(true);
@@ -182,39 +184,116 @@ export default function NocManager() {
             <div className="card-header">
               <div className="card-title">Alarm Control Center</div>
               <div className="card-actions">
-                <div className="noc-search-container">
-                  <Search size={18} className="search-icon" />
-                  <input 
-                    type="text" 
-                    placeholder="Search incidents..." 
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                  {searchTerm && (
-                    <button className="clear-search-btn" onClick={() => setSearchTerm('')}>&times;</button>
-                  )}
-                </div>
-              </div>
-            </div>
+                <div className="mgr-header-actions">
+                  <div className="noc-search-container">
+                    <Search size={18} className="search-icon" />
+                    <input 
+                      type="text" 
+                      placeholder="Search incidents..." 
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    {searchTerm && (
+                      <button className="clear-search-btn" onClick={() => setSearchTerm('')}>&times;</button>
+                    )}
+                  </div>
+                  <div className="mgr-filter-wrapper">
+                    <button 
+                      className={`mgr-filter-btn ${showFilters ? 'active' : ''}`}
+                      onClick={() => setShowFilters(!showFilters)}
+                      title="Toggle Filters"
+                    >
+                      <Filter size={18} />
+                    </button>
 
-            <div className="filter-bar">
-              <div className="filter-group">
-                <label><Filter size={14} /> Domain:</label>
-                <select value={filterDomain} onChange={(e) => setFilterDomain(e.target.value)}>
-                  <option value="all">All Domains</option>
-                  <option value="RAN">RAN Network</option>
-                  <option value="CORE">CORE System</option>
-                  <option value="IP">IP Transport</option>
-                </select>
-              </div>
-              <div className="filter-group">
-                <label><ShieldAlert size={14} /> Priority:</label>
-                <select value={filterPriority} onChange={(e) => setFilterPriority(e.target.value)}>
-                  <option value="all">All Priorities</option>
-                  <option value="critical">Critical</option>
-                  <option value="major">Major</option>
-                  <option value="minor">Minor</option>
-                </select>
+                    {showFilters && (
+                      <>
+                        <div className="mgr-dropdown-overlay" onClick={() => setShowFilters(false)}></div>
+                        <div className="mgr-filter-dropdown animated-fade-in">
+                          <div className="filter-group">
+                            <label>Domain:</label>
+                            <div className={`custom-select ${activeSelect === 'domain' ? 'open' : ''}`}>
+                              <div 
+                                className="select-trigger" 
+                                onClick={() => setActiveSelect(activeSelect === 'domain' ? null : 'domain')}
+                              >
+                                <span>{filterDomain === 'all' ? 'All Domains' : filterDomain}</span>
+                                <ChevronDown size={14} className={activeSelect === 'domain' ? 'rotate' : ''} />
+                              </div>
+                              {activeSelect === 'domain' && (
+                                <div className="options-menu">
+                                  {[
+                                    { id: 'all', label: 'All Domains' },
+                                    { id: 'RAN', label: 'RAN Network' },
+                                    { id: 'CORE', label: 'CORE System' },
+                                    { id: 'IP', label: 'IP Transport' }
+                                  ].map(opt => (
+                                    <div 
+                                      key={opt.id} 
+                                      className={`option-item ${filterDomain === opt.id ? 'selected' : ''}`}
+                                      onClick={() => {
+                                        setFilterDomain(opt.id);
+                                        setActiveSelect(null);
+                                      }}
+                                    >
+                                      {opt.label}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="filter-group">
+                            <label>Priority:</label>
+                            <div className={`custom-select ${activeSelect === 'priority' ? 'open' : ''}`}>
+                              <div 
+                                className="select-trigger" 
+                                onClick={() => setActiveSelect(activeSelect === 'priority' ? null : 'priority')}
+                              >
+                                <span>{filterPriority === 'all' ? 'All Priorities' : filterPriority}</span>
+                                <ChevronDown size={14} className={activeSelect === 'priority' ? 'rotate' : ''} />
+                              </div>
+                              {activeSelect === 'priority' && (
+                                <div className="options-menu">
+                                  {[
+                                    { id: 'all', label: 'All Priorities' },
+                                    { id: 'CRITICAL', label: 'Critical Only' },
+                                    { id: 'MAJOR', label: 'Major Issues' },
+                                    { id: 'MINOR', label: 'Minor Alerts' }
+                                  ].map(opt => (
+                                    <div 
+                                      key={opt.id} 
+                                      className={`option-item ${filterPriority === opt.id ? 'selected' : ''}`}
+                                      onClick={() => {
+                                        setFilterPriority(opt.id);
+                                        setActiveSelect(null);
+                                      }}
+                                    >
+                                      {opt.label}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          <button 
+                            className="mgr-reset-btn"
+                            onClick={() => {
+                              setFilterDomain('all');
+                              setFilterPriority('all');
+                              setSearchTerm('');
+                              setShowFilters(false);
+                            }}
+                          >
+                            Reset All Filters
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -298,11 +377,14 @@ export default function NocManager() {
                         <div className="toggle-sub">L1 - L3 Escalations</div>
                       </div>
                     </div>
-                    <input 
-                      type="checkbox" 
-                      checked={notificationSettings.email} 
-                      onChange={() => toggleChannel('email')} 
-                    />
+                    <label className="switch">
+                      <input 
+                        type="checkbox" 
+                        checked={notificationSettings.email} 
+                        onChange={() => toggleChannel('email')} 
+                      />
+                      <span className="slider round"></span>
+                    </label>
                   </div>
 
                   <div className="toggle-item">
@@ -313,11 +395,14 @@ export default function NocManager() {
                         <div className="toggle-sub">L1 Immediate Alerts</div>
                       </div>
                     </div>
-                    <input 
-                      type="checkbox" 
-                      checked={notificationSettings.slack} 
-                      onChange={() => toggleChannel('slack')} 
-                    />
+                    <label className="switch">
+                      <input 
+                        type="checkbox" 
+                        checked={notificationSettings.slack} 
+                        onChange={() => toggleChannel('slack')} 
+                      />
+                      <span className="slider round"></span>
+                    </label>
                   </div>
 
                   <div className="toggle-item">
@@ -328,22 +413,24 @@ export default function NocManager() {
                         <div className="toggle-sub">Critical Only</div>
                       </div>
                     </div>
-                    <input 
-                      type="checkbox" 
-                      checked={notificationSettings.whatsapp} 
-                      onChange={() => toggleChannel('whatsapp')} 
-                    />
+                    <label className="switch">
+                      <input 
+                        type="checkbox" 
+                        checked={notificationSettings.whatsapp} 
+                        onChange={() => toggleChannel('whatsapp')} 
+                      />
+                      <span className="slider round"></span>
+                    </label>
                   </div>
                 </div>
 
                 <button 
-                  className={`btn btn-secondary btn-sm ${isTestingChannels ? 'loading' : ''}`} 
-                  style={{ width: '100%', justifyContent: 'center' }}
+                  className={`mgr-test-btn ${isTestingChannels ? 'loading' : ''}`} 
                   onClick={handleTestChannels}
                   disabled={isTestingChannels}
                 >
-                  <Share2 size={14} className={isTestingChannels ? 'spin' : ''} />
-                  {isTestingChannels ? 'Testing...' : 'Test All Channels'}
+                  <Share2 size={16} className={isTestingChannels ? 'spin' : ''} />
+                  <span>{isTestingChannels ? 'DIAGNOSTIC IN PROGRESS...' : 'Test All Channels'}</span>
                 </button>
               </div>
             </div>

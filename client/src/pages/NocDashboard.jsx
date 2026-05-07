@@ -227,13 +227,16 @@ export default function NocDashboard() {
                     <Filter size={16} />
                   </button>
                   {showFilterMenu && (
-                    <div className="filter-menu">
-                      <div className="filter-menu-header">Filter by Status</div>
-                      <button className={statusFilter === 'all' ? 'selected' : ''} onClick={() => { setStatusFilter('all'); setShowFilterMenu(false); }}>All Status</button>
-                      <button className={statusFilter === 'up' ? 'selected' : ''} onClick={() => { setStatusFilter('up'); setShowFilterMenu(false); }}>Up / Active</button>
-                      <button className={statusFilter === 'down' ? 'selected' : ''} onClick={() => { setStatusFilter('down'); setShowFilterMenu(false); }}>Down / Inactive</button>
-                      <button className={statusFilter === 'degraded' ? 'selected' : ''} onClick={() => { setStatusFilter('degraded'); setShowFilterMenu(false); }}>Degraded</button>
-                    </div>
+                    <>
+                      <div className="noc-dropdown-overlay" onClick={() => setShowFilterMenu(false)}></div>
+                      <div className="filter-menu">
+                        <div className="filter-menu-header">Filter by Status</div>
+                        <button className={statusFilter === 'all' ? 'selected' : ''} onClick={() => { setStatusFilter('all'); setShowFilterMenu(false); }}>All Status</button>
+                        <button className={statusFilter === 'up' ? 'selected' : ''} onClick={() => { setStatusFilter('up'); setShowFilterMenu(false); }}>Up / Active</button>
+                        <button className={statusFilter === 'down' ? 'selected' : ''} onClick={() => { setStatusFilter('down'); setShowFilterMenu(false); }}>Down / Inactive</button>
+                        <button className={statusFilter === 'degraded' ? 'selected' : ''} onClick={() => { setStatusFilter('degraded'); setShowFilterMenu(false); }}>Degraded</button>
+                      </div>
+                    </>
                   )}
                 </div>
               </div>

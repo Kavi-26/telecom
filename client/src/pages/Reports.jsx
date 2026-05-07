@@ -66,6 +66,77 @@ const domainMetrics = [
   { id: 'ip', name: 'IP Transport', icon: <TrendingUp size={18} />, color: '#10b981' }
 ];
 
+const TacticalCalendar = ({ value, onChange, onClose, label }) => {
+  const [currentDate, setCurrentDate] = useState(new Date(value || Date.now()));
+  const daysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
+  const firstDayOfMonth = (year, month) => new Date(year, month, 1).getDay();
+  
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  
+  const prevMonth = () => setCurrentDate(new Date(year, month - 1, 1));
+  const nextMonth = () => setCurrentDate(new Date(year, month + 1, 1));
+  
+  const handleDateClick = (day) => {
+    const selected = new Date(year, month, day);
+    const formatted = selected.toISOString().split('T')[0];
+    onChange(formatted);
+    onClose();
+  };
+
+  const days = [];
+  const totalDays = daysInMonth(year, month);
+  const startDay = firstDayOfMonth(year, month);
+  
+  // Empty slots for previous month
+  for (let i = 0; i < startDay; i++) {
+    days.push(<div key={`empty-${i}`} className="cal-day empty"></div>);
+  }
+  
+  // Days of current month
+  for (let d = 1; d <= totalDays; d++) {
+    const isToday = new Date().toDateString() === new Date(year, month, d).toDateString();
+    const isSelected = value === new Date(year, month, d).toISOString().split('T')[0];
+    days.push(
+      <div 
+        key={d} 
+        className={`cal-day ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}`}
+        onClick={() => handleDateClick(d)}
+      >
+        {d}
+      </div>
+    );
+  }
+
+  return (
+    <div className="tactical-calendar-overlay" onClick={onClose}>
+      <div className="tactical-calendar" onClick={e => e.stopPropagation()}>
+        <div className="cal-header">
+          <div className="cal-title">
+            <span className="cal-month">{monthNames[month]}</span>
+            <span className="cal-year">{year}</span>
+          </div>
+          <div className="cal-nav">
+            <button onClick={prevMonth}><ChevronRight size={16} style={{ transform: 'rotate(180deg)' }} /></button>
+            <button onClick={nextMonth}><ChevronRight size={16} /></button>
+          </div>
+        </div>
+        <div className="cal-weekdays">
+          {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(d => <div key={d} className="cal-weekday">{d}</div>)}
+        </div>
+        <div className="cal-grid">
+          {days}
+        </div>
+        <div className="cal-footer">
+          <button className="cal-today-btn" onClick={() => handleDateClick(new Date().getDate())}>Today</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function Reports() {
   const [loading, setLoading] = useState(false);
   const [reportData, setReportData] = useState([]);
@@ -76,6 +147,10 @@ export default function Reports() {
   });
   const [selectedDetails, setSelectedDetails] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isDomainSelectOpen, setIsDomainSelectOpen] = useState(false);
+  const [showTableFilters, setShowTableFilters] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const [activeDatePicker, setActiveDatePicker] = useState(null); // 'from' | 'to' | null
 
   useEffect(() => {
     const fetchData = async () => {
@@ -198,31 +273,6 @@ export default function Reports() {
 
       <div className="page-content">
         {/* Filter Bar */}
-        <div className="reports-filter-card">
-          <div className="filter-group">
-            <div className="filter-item">
-              <label><Globe size={14} /> Domain</label>
-              <select value={selectedDomain} onChange={(e) => setSelectedDomain(e.target.value)}>
-                <option value="all">All Domains</option>
-                <option value="ran">RAN (Radio)</option>
-                <option value="core">CORE Network</option>
-                <option value="ip">IP Transport</option>
-              </select>
-            </div>
-            <div className="filter-item">
-              <label><Calendar size={14} /> From</label>
-              <input type="date" value={dateRange.from} onChange={(e) => setDateRange({...dateRange, from: e.target.value})} />
-            </div>
-            <div className="filter-item">
-              <label><Calendar size={14} /> To</label>
-              <input type="date" value={dateRange.to} onChange={(e) => setDateRange({...dateRange, to: e.target.value})} />
-            </div>
-          </div>
-          <div className="filter-actions">
-            <button className="btn btn-secondary" onClick={() => handleExport('excel')}><Download size={16} /> Excel</button>
-            <button className="btn btn-primary" onClick={() => handleExport('pdf')}><Printer size={16} /> PDF Report</button>
-          </div>
-        </div>
 
         {/* Stats Grid */}
         <div className="grid grid-4" style={{ marginBottom: '1.5rem' }}>
@@ -329,18 +379,139 @@ export default function Reports() {
           </div>
         </div>
 
+
         {/* Detailed Data Table */}
         <div className="card table-card-reports">
           <div className="panel-header">
             <h3>Detailed Performance Logs</h3>
-            <div className="search-box-modern">
-              <Search size={16} />
-              <input 
-                type="text" 
-                placeholder="Search logs..." 
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+            <div className="reports-table-actions">
+              <div className="search-box-modern">
+                <Search size={16} />
+                <input 
+                  type="text" 
+                  placeholder="Search logs..." 
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+
+              <div className="reports-action-group">
+                <div className="action-wrapper">
+                  <button 
+                    className={`reports-icon-btn ${showTableFilters ? 'active' : ''}`}
+                    onClick={() => {
+                      setShowTableFilters(!showTableFilters);
+                      setShowExportMenu(false);
+                    }}
+                    title="Filters"
+                  >
+                    <Filter size={18} />
+                  </button>
+
+                  {showTableFilters && (
+                    <>
+                      <div className="reports-dropdown-overlay" onClick={() => setShowTableFilters(false)}></div>
+                      <div className="reports-filter-dropdown animated-fade-in">
+                        <div className="r-filter-section">
+                          <label>Network Domain</label>
+                          <div className={`reports-custom-select ${isDomainSelectOpen ? 'open' : ''}`}>
+                            <div 
+                              className="reports-select-trigger" 
+                              onClick={() => setIsDomainSelectOpen(!isDomainSelectOpen)}
+                            >
+                              <span>{selectedDomain === 'all' ? 'All Domains' : domainMetrics.find(d => d.id === selectedDomain)?.name || selectedDomain}</span>
+                              <ChevronRight size={14} className={isDomainSelectOpen ? 'rotate-down' : ''} />
+                            </div>
+                            {isDomainSelectOpen && (
+                              <div className="reports-options-menu">
+                                <div 
+                                  className={`r-option ${selectedDomain === 'all' ? 'selected' : ''}`}
+                                  onClick={() => { setSelectedDomain('all'); setIsDomainSelectOpen(false); }}
+                                >
+                                  All Domains
+                                </div>
+                                {domainMetrics.map(domain => (
+                                  <div 
+                                    key={domain.id} 
+                                    className={`r-option ${selectedDomain === domain.id ? 'selected' : ''}`}
+                                    onClick={() => { setSelectedDomain(domain.id); setIsDomainSelectOpen(false); }}
+                                  >
+                                    {domain.name}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="r-filter-section">
+                          <label>Date Range</label>
+                          <div className="r-date-inputs">
+                            <div className="date-input-wrapper" onClick={() => setActiveDatePicker('from')}>
+                              <Calendar size={14} className="date-icon" />
+                              <div className="custom-date-display">
+                                {new Date(dateRange.from).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                              </div>
+                            </div>
+                            {activeDatePicker === 'from' && (
+                              <TacticalCalendar 
+                                value={dateRange.from} 
+                                onChange={(val) => setDateRange({...dateRange, from: val})}
+                                onClose={() => setActiveDatePicker(null)}
+                                label="From Date"
+                              />
+                            )}
+
+                            <div className="date-input-wrapper" onClick={() => setActiveDatePicker('to')}>
+                              <Calendar size={14} className="date-icon" />
+                              <div className="custom-date-display">
+                                {new Date(dateRange.to).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                              </div>
+                            </div>
+                            {activeDatePicker === 'to' && (
+                              <TacticalCalendar 
+                                value={dateRange.to} 
+                                onChange={(val) => setDateRange({...dateRange, to: val})}
+                                onClose={() => setActiveDatePicker(null)}
+                                label="To Date"
+                              />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="action-wrapper">
+                  <button 
+                    className={`reports-icon-btn ${showExportMenu ? 'active' : ''}`}
+                    onClick={() => {
+                      setShowExportMenu(!showExportMenu);
+                      setShowTableFilters(false);
+                    }}
+                    title="Export Report"
+                  >
+                    <Download size={18} />
+                  </button>
+
+                  {showExportMenu && (
+                    <>
+                      <div className="reports-dropdown-overlay" onClick={() => setShowExportMenu(false)}></div>
+                      <div className="reports-export-dropdown animated-fade-in">
+                        <div className="export-option" onClick={() => { handleExport('excel'); setShowExportMenu(false); }}>
+                          <BarChart3 size={16} />
+                          <span>Export to Excel (.xlsx)</span>
+                        </div>
+                        <div className="export-option" onClick={() => { handleExport('pdf'); setShowExportMenu(false); }}>
+                          <FileText size={16} />
+                          <span>Export to PDF (.pdf)</span>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
           <div className="table-container">

@@ -530,19 +530,22 @@ export default function RANPage() {
                   <Filter size={14} /> Filter
                 </button>
                 {showFilter && (
-                  <div className="filter-menu">
-                    <div className="filter-section-label" style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 700, padding: '4px 8px' }}>STATUS</div>
-                    <div className={`filter-option ${filters.status === 'all' ? 'active' : ''}`} onClick={() => setFilters({...filters, status: 'all'})}>All Status</div>
-                    <div className={`filter-option ${filters.status === 'up' ? 'active' : ''}`} onClick={() => setFilters({...filters, status: 'up'})}>Up (Online)</div>
-                    <div className={`filter-option ${filters.status === 'down' ? 'active' : ''}`} onClick={() => setFilters({...filters, status: 'down'})}>Down (Offline)</div>
-                    
-                    <div className="filter-divider" style={{ height: '1px', background: 'var(--border)', margin: '4px 0' }}></div>
-                    
-                    <div className="filter-section-label" style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 700, padding: '4px 8px' }}>TECHNOLOGY</div>
-                    <div className={`filter-option ${filters.technology === 'all' ? 'active' : ''}`} onClick={() => setFilters({...filters, technology: 'all'})}>All Tech</div>
-                    <div className={`filter-option ${filters.technology === '4G' ? 'active' : ''}`} onClick={() => setFilters({...filters, technology: '4G'})}>4G / LTE</div>
-                    <div className={`filter-option ${filters.technology === '5G' ? 'active' : ''}`} onClick={() => setFilters({...filters, technology: '5G'})}>5G (NR)</div>
-                  </div>
+                  <>
+                    <div className="ran-dropdown-overlay" onClick={() => setShowFilter(false)}></div>
+                    <div className="filter-menu">
+                      <div className="filter-section-label" style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 700, padding: '4px 8px' }}>STATUS</div>
+                      <div className={`filter-option ${filters.status === 'all' ? 'active' : ''}`} onClick={() => { setFilters({...filters, status: 'all'}); setShowFilter(false); }}>All Status</div>
+                      <div className={`filter-option ${filters.status === 'up' ? 'active' : ''}`} onClick={() => { setFilters({...filters, status: 'up'}); setShowFilter(false); }}>Up (Online)</div>
+                      <div className={`filter-option ${filters.status === 'down' ? 'active' : ''}`} onClick={() => { setFilters({...filters, status: 'down'}); setShowFilter(false); }}>Down (Offline)</div>
+                      
+                      <div className="filter-divider" style={{ height: '1px', background: 'var(--border)', margin: '4px 0' }}></div>
+                      
+                      <div className="filter-section-label" style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 700, padding: '4px 8px' }}>TECHNOLOGY</div>
+                      <div className={`filter-option ${filters.technology === 'all' ? 'active' : ''}`} onClick={() => { setFilters({...filters, technology: 'all'}); setShowFilter(false); }}>All Tech</div>
+                      <div className={`filter-option ${filters.technology === '4G' ? 'active' : ''}`} onClick={() => { setFilters({...filters, technology: '4G'}); setShowFilter(false); }}>4G / LTE</div>
+                      <div className={`filter-option ${filters.technology === '5G' ? 'active' : ''}`} onClick={() => { setFilters({...filters, technology: '5G'}); setShowFilter(false); }}>5G (NR)</div>
+                    </div>
+                  </>
                 )}
               </div>
               <button className="btn btn-secondary btn-sm" onClick={() => handleExport('excel')}><Download size={14} /> Excel</button>

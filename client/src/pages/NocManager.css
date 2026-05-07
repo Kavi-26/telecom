@@ -66,11 +66,17 @@
 }
 
 /* Premium Pill Search Bar */
+.mgr-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .noc-search-container {
   position: relative;
   display: flex;
   align-items: center;
-  width: 320px;
+  width: 280px;
 }
 
 .noc-search-container .search-icon {
@@ -98,7 +104,7 @@
   border-color: var(--brand-primary);
   background: var(--bg-card);
   box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.1), 0 10px 20px rgba(0, 0, 0, 0.1);
-  width: 360px;
+  width: 320px;
 }
 
 .noc-search-container input:focus + .search-icon {
@@ -127,14 +133,161 @@
   color: var(--text-primary);
 }
 
-/* Filter Bar */
-.filter-bar {
-  display: flex;
-  gap: 1.5rem;
-  padding: 1rem 1.5rem;
+.mgr-filter-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
   background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border);
-  margin: 0 -1.5rem 1rem -1.5rem;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mgr-filter-btn:hover {
+  background: var(--bg-card);
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 229, 255, 0.15);
+}
+
+.mgr-filter-btn:active {
+  transform: translateY(0);
+}
+
+.mgr-filter-btn.active {
+  background: var(--brand-primary);
+  color: #000;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 15px var(--brand-glow);
+}
+
+.mgr-filter-wrapper {
+  position: relative;
+}
+
+.mgr-dropdown-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 95;
+  background: transparent;
+}
+
+/* Filter Dropdown */
+.mgr-filter-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 240px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  backdrop-filter: blur(10px);
+}
+
+.mgr-filter-dropdown .filter-group {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.mgr-filter-dropdown .filter-group select {
+  width: 100%;
+}
+
+/* Custom Select Styles */
+.custom-select {
+  position: relative;
+  width: 100%;
+}
+
+.select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.875rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.select-trigger:hover {
+  border-color: var(--brand-primary);
+  background: var(--bg-card);
+}
+
+.custom-select.open .select-trigger {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.1);
+}
+
+.options-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  z-index: 110;
+  animation: slideDown 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.option-item {
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.option-item:hover {
+  background: var(--bg-secondary);
+  color: var(--brand-primary);
+  padding-left: 1.25rem;
+}
+
+.option-item.selected {
+  background: rgba(0, 229, 255, 0.1);
+  color: var(--brand-primary);
+  font-weight: 700;
+}
+
+.rotate {
+  transform: rotate(180deg);
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animated-fade-in {
+  animation: filterFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes filterFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .filter-group {
@@ -477,7 +630,101 @@
 
 .toggle-sub {
   font-size: 0.7rem;
-  color: var(--text-muted);
+  color: var(--text-dim);
+}
+
+/* Premium Switches */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: var(--border);
+  transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+input:checked + .slider {
+  background-color: var(--brand-primary);
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+/* Diagnostic Button */
+.mgr-test-btn {
+  width: 100%;
+  padding: 0.875rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.mgr-test-btn:hover:not(:disabled) {
+  background: var(--bg-secondary);
+  border-color: var(--brand-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 229, 255, 0.15);
+}
+
+.mgr-test-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.mgr-test-btn.loading {
+  background: var(--bg-secondary);
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+  cursor: wait;
+}
+
+.mgr-test-btn .spin {
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* Escalation Body */
