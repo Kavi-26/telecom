@@ -306,7 +306,7 @@ export default function NocManager() {
                     <th>Network Element</th>
                     <th>Description</th>
                     <th>Duration</th>
-                    <th>Actions</th>
+                    <th style={{ textAlign: 'center' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -330,8 +330,8 @@ export default function NocManager() {
                           {calculateDuration(alarm.created_at || alarm.timestamp)}
                         </div>
                       </td>
-                      <td>
-                        <div className="action-group">
+                      <td style={{ textAlign: 'center' }}>
+                        <div className="action-group" style={{ justifyContent: 'center' }}>
                           <button 
                             className={`mgr-btn ack ${alarm.status === 'acknowledged' ? 'done' : ''}`}
                             onClick={() => handleAction(alarm.id, 'acknowledge')} 

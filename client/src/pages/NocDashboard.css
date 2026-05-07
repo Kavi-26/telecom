@@ -272,7 +272,7 @@
 }
 
 .noc-card-header {
-  padding: 20px 24px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
@@ -404,7 +404,7 @@
 
 .noc-table th {
   background: var(--bg-secondary);
-  padding: px 24px;
+  padding: 10px 16px;
   text-align: left;
   font-size: 12px;
   font-weight: 600;
@@ -423,7 +423,7 @@
 }
 
 .noc-row td {
-  padding: 20px 24px;
+  padding: 10px 16px;
 }
 
 .name-cell {

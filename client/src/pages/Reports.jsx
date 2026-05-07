@@ -239,15 +239,15 @@ export default function Reports() {
     if (active && payload && payload.length) {
       return (
         <div className="custom-chart-tooltip" style={{ 
-          background: 'rgba(15, 23, 42, 0.95)', 
-          border: '1px solid var(--brand-primary)',
+          background: 'var(--bg-card)', 
+          border: '1px solid var(--border)',
           padding: '12px',
           borderRadius: '10px',
           boxShadow: 'var(--shadow-lg)',
           backdropFilter: 'blur(10px)',
-          color: '#fff'
+          color: 'var(--text-primary)'
         }}>
-          <p className="label" style={{ fontWeight: 800, marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '4px' }}>
+          <p className="label" style={{ fontWeight: 800, marginBottom: '8px', borderBottom: '1px solid var(--border)', paddingBottom: '4px' }}>
             {new Date(label).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
           </p>
           {payload.map((p, i) => (
@@ -524,7 +524,7 @@ export default function Reports() {
                   <th>IP Transport</th>
                   <th>Traffic Load</th>
                   <th>Avg Latency</th>
-                  <th></th>
+                  <th style={{ textAlign: 'center' }}>Explore</th>
                 </tr>
               </thead>
               <tbody>
@@ -551,7 +551,9 @@ export default function Reports() {
                     </td>
                     <td>{(row.traffic / 100).toFixed(2)} Tbps</td>
                     <td><span className={`l-badge ${row.latency > 22 ? 'high' : 'low'}`}>{row.latency.toFixed(1)} ms</span></td>
-                    <td><button className="action-circle-btn"><ChevronRight size={16} /></button></td>
+                    <td style={{ textAlign: 'center' }}>
+                      <button className="action-circle-btn" title="View Detailed Analysis"><ChevronRight size={16} /></button>
+                    </td>
                   </tr>
                 ))}
                 {filteredData.length === 0 && (

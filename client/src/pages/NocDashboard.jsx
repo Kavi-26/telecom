@@ -251,7 +251,7 @@ export default function NocDashboard() {
                     <th>Location / Region</th>
                     <th>Status</th>
                     <th>Performance</th>
-                    <th>Actions</th>
+                    <th style={{ textAlign: 'center' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -286,7 +286,7 @@ export default function NocDashboard() {
                           <span className="perf-val">9{Math.floor(Math.random() * 9)}%</span>
                         </div>
                       </td>
-                      <td>
+                      <td style={{ textAlign: 'center' }}>
                         <button 
                           className="btn-manage" 
                           onClick={() => setSelectedElement(item)}

@@ -165,15 +165,15 @@ export default function TransportPage() {
     if (active && payload && payload.length) {
       return (
         <div className="custom-chart-tooltip" style={{ 
-          background: 'rgba(15, 23, 42, 0.95)', 
-          border: '1px solid var(--brand-primary)',
+          background: 'var(--bg-card)', 
+          border: '1px solid var(--border)',
           padding: '12px',
           borderRadius: '10px',
           boxShadow: 'var(--shadow-lg)',
           backdropFilter: 'blur(10px)',
-          color: '#fff'
+          color: 'var(--text-primary)'
         }}>
-          <p className="label" style={{ fontWeight: 800, marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '4px' }}>{label}</p>
+          <p className="label" style={{ fontWeight: 800, marginBottom: '8px', borderBottom: '1px solid var(--border)', paddingBottom: '4px' }}>{label}</p>
           {payload.map((p, i) => (
             <p key={i} style={{ color: p.color, fontSize: '13px', fontWeight: 600, display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
               <span>{p.name}:</span>
@@ -368,12 +368,6 @@ export default function TransportPage() {
                     <TileLayer
                       attribution='&copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
                       url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-                    />
-                  </LayersControl.BaseLayer>
-                  <LayersControl.BaseLayer name="Terrain">
-                    <TileLayer
-                      attribution='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
-                      url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
                     />
                   </LayersControl.BaseLayer>
                 </LayersControl>

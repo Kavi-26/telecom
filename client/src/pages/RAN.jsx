@@ -43,7 +43,8 @@ import {
   ResponsiveContainer,
   LineChart,
   Line,
-  Legend
+  Legend,
+  Label
 } from 'recharts';
 
 import Navbar from '../components/common/Navbar';
@@ -120,7 +121,7 @@ export default function RANPage() {
         if (bts.status === 'down') {
           return { ...bts, utilization: 0, rsrp: -120, sinr: 0 };
         }
-        
+
         // Fluctuations
         const utilChange = (Math.random() * 4 - 2);
         const rsrpChange = (Math.random() * 2 - 1);
@@ -178,11 +179,11 @@ export default function RANPage() {
   const filteredBts = useMemo(() => {
     return btsList.filter(bts => {
       const matchesSearch = bts.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           (bts.vendor && bts.vendor.toLowerCase().includes(searchTerm.toLowerCase()));
-      
+        (bts.vendor && bts.vendor.toLowerCase().includes(searchTerm.toLowerCase()));
+
       const matchesStatus = filters.status === 'all' || bts.status === filters.status;
       const matchesTech = filters.technology === 'all' || bts.technology === filters.technology;
-      
+
       return matchesSearch && matchesStatus && matchesTech;
     });
   }, [btsList, searchTerm, filters]);
@@ -204,16 +205,16 @@ export default function RANPage() {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="custom-chart-tooltip" style={{ 
-          background: 'rgba(15, 23, 42, 0.95)', 
-          border: '1px solid var(--brand-primary)',
+        <div className="custom-chart-tooltip" style={{
+          background: 'var(--bg-card)',
+          border: '1px solid var(--border)',
           padding: '12px',
           borderRadius: '10px',
           boxShadow: 'var(--shadow-lg)',
           backdropFilter: 'blur(10px)',
-          color: '#fff'
+          color: 'var(--text-primary)'
         }}>
-          <p className="label" style={{ fontWeight: 800, marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '4px' }}>{label}</p>
+          <p className="label" style={{ fontWeight: 800, marginBottom: '8px', borderBottom: '1px solid var(--border)', paddingBottom: '4px' }}>{label}</p>
           {payload.map((p, i) => (
             <p key={i} style={{ color: p.color, fontSize: '13px', fontWeight: 600, display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
               <span>{p.name}:</span>
@@ -248,8 +249,8 @@ export default function RANPage() {
                 Multiple BTS stations are reporting critical hardware failures. Network capacity is reduced by {((btsList.filter(b => b.status === 'down').length / btsList.length) * 100).toFixed(1)}%.
               </div>
             </div>
-            <button 
-              className="btn btn-primary btn-sm" 
+            <button
+              className="btn btn-primary btn-sm"
               style={{ background: 'var(--status-down)', border: 'none', color: '#fff' }}
               onClick={handleImmediateAction}
             >
@@ -301,13 +302,17 @@ export default function RANPage() {
                     tickFormatter={(val) => val.split(' ')[0]}
                     interval={6}
                     tick={{ fontWeight: 600 }}
-                  />
-                  <YAxis 
-                    stroke="var(--text-secondary)" 
-                    fontSize={12} 
-                    unit="%" 
+                  >
+                    <Label value="TIME (Last 10 Days)" offset={-5} position="insideBottom" style={{ fill: 'var(--text-muted)', fontSize: '11px', fontWeight: 700 }} />
+                  </XAxis>
+                  <YAxis
+                    stroke="var(--text-secondary)"
+                    fontSize={12}
+                    unit="%"
                     tick={{ fontWeight: 600 }}
-                  />
+                  >
+                    <Label value="UTILIZATION (%)" angle={-90} position="insideLeft" style={{ fill: 'var(--text-muted)', fontSize: '11px', fontWeight: 700, textAnchor: 'middle' }} />
+                  </YAxis>
                   <Tooltip content={<CustomTooltip />} />
                   <Area
                     type="monotone"
@@ -343,24 +348,30 @@ export default function RANPage() {
                     tickFormatter={(val) => val.split(' ')[0]}
                     interval={6}
                     tick={{ fontWeight: 600 }}
-                  />
-                  <YAxis 
-                    yAxisId="left" 
-                    stroke="var(--brand-primary)" 
-                    fontSize={12} 
-                    unit="dBm" 
-                    domain={[-110, -60]} 
+                  >
+                    <Label value="TIME (Last 10 Days)" offset={-5} position="insideBottom" style={{ fill: 'var(--text-muted)', fontSize: '11px', fontWeight: 700 }} />
+                  </XAxis>
+                  <YAxis
+                    yAxisId="left"
+                    stroke="var(--brand-primary)"
+                    fontSize={12}
+                    unit="dBm"
+                    domain={[-110, -60]}
                     tick={{ fontWeight: 600 }}
-                  />
-                  <YAxis 
-                    yAxisId="right" 
-                    orientation="right" 
-                    stroke="var(--brand-accent)" 
-                    fontSize={12} 
-                    unit="dB" 
-                    domain={[-25, 30]} 
+                  >
+                    <Label value="SIGNAL (dBm)" angle={-90} position="insideLeft" style={{ fill: 'var(--brand-primary)', fontSize: '11px', fontWeight: 700, textAnchor: 'middle' }} />
+                  </YAxis>
+                  <YAxis
+                    yAxisId="right"
+                    orientation="right"
+                    stroke="var(--brand-accent)"
+                    fontSize={12}
+                    unit="dB"
+                    domain={[-25, 30]}
                     tick={{ fontWeight: 600 }}
-                  />
+                  >
+                    <Label value="QUALITY (dB)" angle={90} position="insideRight" style={{ fill: 'var(--brand-accent)', fontSize: '11px', fontWeight: 700, textAnchor: 'middle' }} />
+                  </YAxis>
                   <Tooltip content={<CustomTooltip />} />
                   <Legend verticalAlign="top" height={36} />
                   <Line
@@ -432,12 +443,6 @@ export default function RANPage() {
                     <TileLayer
                       attribution='&copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
                       url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-                    />
-                  </LayersControl.BaseLayer>
-                  <LayersControl.BaseLayer name="Terrain">
-                    <TileLayer
-                      attribution='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
-                      url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
                     />
                   </LayersControl.BaseLayer>
                 </LayersControl>
@@ -523,7 +528,7 @@ export default function RANPage() {
                 />
               </div>
               <div style={{ position: 'relative' }}>
-                <button 
+                <button
                   className={`btn btn-secondary btn-sm ${showFilter ? 'active' : ''}`}
                   onClick={() => setShowFilter(!showFilter)}
                 >
@@ -534,16 +539,16 @@ export default function RANPage() {
                     <div className="ran-dropdown-overlay" onClick={() => setShowFilter(false)}></div>
                     <div className="filter-menu">
                       <div className="filter-section-label" style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 700, padding: '4px 8px' }}>STATUS</div>
-                      <div className={`filter-option ${filters.status === 'all' ? 'active' : ''}`} onClick={() => { setFilters({...filters, status: 'all'}); setShowFilter(false); }}>All Status</div>
-                      <div className={`filter-option ${filters.status === 'up' ? 'active' : ''}`} onClick={() => { setFilters({...filters, status: 'up'}); setShowFilter(false); }}>Up (Online)</div>
-                      <div className={`filter-option ${filters.status === 'down' ? 'active' : ''}`} onClick={() => { setFilters({...filters, status: 'down'}); setShowFilter(false); }}>Down (Offline)</div>
-                      
+                      <div className={`filter-option ${filters.status === 'all' ? 'active' : ''}`} onClick={() => { setFilters({ ...filters, status: 'all' }); setShowFilter(false); }}>All Status</div>
+                      <div className={`filter-option ${filters.status === 'up' ? 'active' : ''}`} onClick={() => { setFilters({ ...filters, status: 'up' }); setShowFilter(false); }}>Up (Online)</div>
+                      <div className={`filter-option ${filters.status === 'down' ? 'active' : ''}`} onClick={() => { setFilters({ ...filters, status: 'down' }); setShowFilter(false); }}>Down (Offline)</div>
+
                       <div className="filter-divider" style={{ height: '1px', background: 'var(--border)', margin: '4px 0' }}></div>
-                      
+
                       <div className="filter-section-label" style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 700, padding: '4px 8px' }}>TECHNOLOGY</div>
-                      <div className={`filter-option ${filters.technology === 'all' ? 'active' : ''}`} onClick={() => { setFilters({...filters, technology: 'all'}); setShowFilter(false); }}>All Tech</div>
-                      <div className={`filter-option ${filters.technology === '4G' ? 'active' : ''}`} onClick={() => { setFilters({...filters, technology: '4G'}); setShowFilter(false); }}>4G / LTE</div>
-                      <div className={`filter-option ${filters.technology === '5G' ? 'active' : ''}`} onClick={() => { setFilters({...filters, technology: '5G'}); setShowFilter(false); }}>5G (NR)</div>
+                      <div className={`filter-option ${filters.technology === 'all' ? 'active' : ''}`} onClick={() => { setFilters({ ...filters, technology: 'all' }); setShowFilter(false); }}>All Tech</div>
+                      <div className={`filter-option ${filters.technology === '4G' ? 'active' : ''}`} onClick={() => { setFilters({ ...filters, technology: '4G' }); setShowFilter(false); }}>4G / LTE</div>
+                      <div className={`filter-option ${filters.technology === '5G' ? 'active' : ''}`} onClick={() => { setFilters({ ...filters, technology: '5G' }); setShowFilter(false); }}>5G (NR)</div>
                     </div>
                   </>
                 )}
@@ -577,24 +582,24 @@ export default function RANPage() {
                     </td>
                     <td><span className="domain-pill ran" style={{ fontSize: '10px' }}>{bts.technology}</span></td>
                     <td>{bts.vendor || 'N/A'}</td>
-                    <td style={{ 
+                    <td style={{
                       color: bts.status === 'down' || bts.rsrp < -100 ? '#ef4444' : bts.rsrp < -90 ? '#f59e0b' : '#22c55e',
-                      fontWeight: 700 
+                      fontWeight: 700
                     }}>
                       {bts.status === 'down' ? 'OFFLINE' : `${Math.round(bts.rsrp)} dBm`}
                     </td>
-                    <td style={{ 
+                    <td style={{
                       color: bts.status === 'down' || bts.sinr < 5 ? '#ef4444' : bts.sinr < 12 ? '#f59e0b' : '#22c55e',
-                      fontWeight: 600 
+                      fontWeight: 600
                     }}>
                       {bts.status === 'down' ? '0' : Math.round(bts.sinr)} dB
                     </td>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <div className="progress-bar" style={{ width: '60px', background: 'var(--bg-secondary)', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
-                          <div 
-                            className="progress-fill" 
-                            style={{ 
+                          <div
+                            className="progress-fill"
+                            style={{
                               width: `${bts.utilization || 64}%`,
                               height: '100%',
                               background: getUtilColor(bts.utilization || 64),
@@ -682,8 +687,22 @@ export default function RANPage() {
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={perfData.slice(-12)}>
                       <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" vertical={false} />
-                      <XAxis dataKey="time" hide />
-                      <YAxis hide domain={[0, 100]} />
+                      <XAxis 
+                        dataKey="time" 
+                        tick={{fill: 'var(--text-muted)', fontSize: 10}}
+                        axisLine={false}
+                        tickLine={false}
+                      >
+                        <Label value="TIME (Last 12h)" offset={-5} position="insideBottom" style={{ fill: 'var(--text-muted)', fontSize: '10px', fontWeight: 700 }} />
+                      </XAxis>
+                      <YAxis 
+                        tick={{fill: 'var(--text-muted)', fontSize: 10}}
+                        axisLine={false}
+                        tickLine={false}
+                        domain={[0, 100]}
+                      >
+                        <Label value="UTILIZATION (%)" angle={-90} position="insideLeft" style={{ fill: 'var(--text-muted)', fontSize: '10px', fontWeight: 700, textAnchor: 'middle' }} />
+                      </YAxis>
                       <Tooltip content={<CustomTooltip />} />
                       <Area type="monotone" dataKey="utilization" name="Utilization" unit="%" stroke="var(--domain-ran)" fill="var(--domain-ran)" fillOpacity={0.1} />
                     </AreaChart>

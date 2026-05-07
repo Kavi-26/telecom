@@ -30,7 +30,8 @@ import {
   ResponsiveContainer,
   LineChart,
   Line,
-  Legend
+  Legend,
+  Label
 } from 'recharts';
 
 import Navbar from '../components/common/Navbar';
@@ -141,15 +142,15 @@ export default function COREPage() {
     if (active && payload && payload.length) {
       return (
         <div className="custom-chart-tooltip" style={{ 
-          background: 'rgba(15, 23, 42, 0.95)', 
-          border: '1px solid var(--brand-primary)',
+          background: 'var(--bg-card)', 
+          border: '1px solid var(--border)',
           padding: '12px',
           borderRadius: '10px',
           boxShadow: 'var(--shadow-lg)',
           backdropFilter: 'blur(10px)',
-          color: '#fff'
+          color: 'var(--text-primary)'
         }}>
-          <p className="label" style={{ fontWeight: 800, marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '4px' }}>{label}</p>
+          <p className="label" style={{ fontWeight: 800, marginBottom: '8px', borderBottom: '1px solid var(--border)', paddingBottom: '4px' }}>{label}</p>
           {payload.map((p, i) => (
             <p key={i} style={{ color: p.color, fontSize: '13px', fontWeight: 600, display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
               <span>{p.name}:</span>
@@ -366,7 +367,7 @@ export default function COREPage() {
                   <th>Latency</th>
                   <th>Success Rate</th>
                   <th>Load</th>
-                  <th>Actions</th>
+                  <th style={{ textAlign: 'center' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -407,7 +408,7 @@ export default function COREPage() {
                         </span>
                       </div>
                     </td>
-                    <td>
+                    <td style={{ textAlign: 'center' }}>
                       <button className="btn btn-ghost btn-sm" onClick={() => setSelectedElement(el)}>View Details</button>
                     </td>
                   </tr>
@@ -483,8 +484,21 @@ export default function COREPage() {
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={perfData.slice(-12)}>
                       <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" vertical={false} />
-                      <XAxis dataKey="time" hide />
-                      <YAxis hide />
+                      <XAxis 
+                        dataKey="time" 
+                        tick={{fill: 'var(--text-muted)', fontSize: 10}}
+                        axisLine={false}
+                        tickLine={false}
+                      >
+                        <Label value="TIME (Last 12h)" offset={-5} position="insideBottom" style={{ fill: 'var(--text-muted)', fontSize: '10px', fontWeight: 700 }} />
+                      </XAxis>
+                      <YAxis 
+                        tick={{fill: 'var(--text-muted)', fontSize: 10}}
+                        axisLine={false}
+                        tickLine={false}
+                      >
+                        <Label value="GBPS" angle={-90} position="insideLeft" style={{ fill: 'var(--text-muted)', fontSize: '10px', fontWeight: 700, textAnchor: 'middle' }} />
+                      </YAxis>
                       <Tooltip content={<CustomTooltip />} />
                       <Area type="monotone" dataKey="throughput" name="Throughput" unit="Gbps" stroke="var(--domain-core)" fill="var(--domain-core)" fillOpacity={0.1} />
                     </AreaChart>
